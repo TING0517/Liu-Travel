@@ -1,7 +1,7 @@
 // --- DATA ---
 const itinerary = {
     1: [
-        { time: "08:00", text: "飯店放行李-Toyoko Inn 釜山海雲2", stay: "15分", type: "hotel" },
+        { time: "08:00", text: "飯店放行李-Toyoko Inn 釜山海雲台2", stay: "15分", type: "hotel" },
         { time: "08:20", text: "早餐-密陽血腸豬肉湯飯 海雲台店", stay: "1小時", type: "food" },
         { time: "09:25", text: "換錢-MONEYBOX HAEUNDAE", stay: "15分" },
         { time: "09:40", text: "海雲台海灘", stay: "20分" },
