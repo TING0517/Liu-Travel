@@ -134,41 +134,27 @@ function changeFxRate() {
     const newRate = prompt("請輸入當前的韓元對台幣匯率 (例如 46 或 45.5):", fxRate);
     if (newRate !== null && !isNaN(newRate) && newRate > 0) {
         fxRate = parseFloat(newRate);
-        localStorage.setItem('fxRate', fxRate); // 儲存到本地
+        localStorage.setItem('fxRate', fxRate);
         document.getElementById('fx-rate-display').innerText = `匯率 1 : ${fxRate}`;
-        handleCalcInput(); // 重新計算當前輸入
+        handleCalcInput();
     }
 }
 
-function showPage(pageId) {
-    document.querySelectorAll('.tab-page').forEach(p => p.classList.add('hidden'));
-    const targetPage = document.getElementById(`page-${pageId}`);
-    if (targetPage) {
-        targetPage.classList.remove('hidden');
-        targetPage.classList.add('fade-in');
+function getAutoDay() {
+    const startDate = new Date('2026-03-29');
+    const endDate = new Date('2026-04-04');
+    const today = new Date();
+    
+    // 統一時間基準 (00:00:00) 以進行日期比較
+    today.setHours(0, 0, 0, 0);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+
+    if (today >= startDate && today <= endDate) {
+        // 計算天數差 (+1 是因為從 Day 1 開始)
+        return Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
     }
-
-    // 當進入特定頁面 (如計算機、導覽、天氣) 時隱藏 Header，騰出垂直空間
-    const header = document.getElementById('main-header');
-    if (header) {
-        const noHeaderPages = ['wallet', 'guide', 'info'];
-        if (noHeaderPages.includes(pageId)) header.classList.add('hidden');
-        else header.classList.remove('hidden');
-    }
-
-    document.querySelectorAll('.nav-btn').forEach(b => {
-        b.classList.remove('nav-active');
-        b.classList.add('text-slate-400');
-    });
-
-    // Find button that triggered the event or matches pageId
-    const btn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick')?.includes(pageId));
-    if (btn) {
-        btn.classList.add('nav-active');
-        btn.classList.remove('text-slate-400');
-    }
-
-    window.scrollTo(0, 0);
+    return 1; // 不在範圍內則預設為第一天
 }
 
 function switchDay(day) {
@@ -417,35 +403,6 @@ function getWeatherIcon(code) {
     return 'fa-cloud';
 }
 
-function initPetals() {
-    const container = document.getElementById('bg-animation-container');
-    if (!container) return;
-    const petalCount = 15; // 適中數量
-
-    for (let i = 0; i < petalCount; i++) {
-        const petal = document.createElement('div');
-        petal.className = 'petal';
-
-        // 隨機尺寸
-        const size = Math.random() * 10 + 10 + 'px';
-        petal.style.width = size;
-        petal.style.height = size;
-
-        // 隨機水平位置
-        petal.style.left = Math.random() * 100 + 'vw';
-
-        // 隨機動畫時間與延遲
-        const duration = Math.random() * 10 + 10 + 's';
-        const delay = Math.random() * 10 + 's';
-        const shakeDuration = Math.random() * 2 + 2 + 's';
-
-        petal.style.animationDuration = `${duration}, ${shakeDuration}`;
-        petal.style.animationDelay = `${delay}, ${delay}`;
-
-        container.appendChild(petal);
-    }
-}
-
 // --- INIT ---
 window.onload = () => {
     // 優先讀取紀錄中的匯率
@@ -456,9 +413,18 @@ window.onload = () => {
         if (fxDisplay) fxDisplay.innerText = `匯率 1 : ${fxRate}`;
     }
 
-    renderItinerary();
-    renderGuides();
-    fetchWeather();
-    initPetals();
-    switchDay(1);
+    // 根據頁面容器執行對應初始化
+    if (document.getElementById('itinerary-container')) {
+        const autoDay = getAutoDay();
+        renderItinerary();
+        switchDay(autoDay);
+    }
+    
+    if (document.getElementById('guide-container')) {
+        renderGuides();
+    }
+    
+    if (document.getElementById('weather-busan')) {
+        fetchWeather();
+    }
 };

@@ -13,7 +13,7 @@
 
 body {
     font-family: 'Noto Sans TC', 'Quicksand', sans-serif;
-    background: linear-gradient(270deg, #fdf2f8, #f0f9ff, #e0f2fe);
+    background: linear-gradient(270deg, #f0faff, #e0f2fe, #bae6fd);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
     color: #1E293B;
@@ -180,13 +180,13 @@ input:focus {
 
 /* Calculator Keypad */
 .calc-btn {
-    height: 62px;
+    height: 54px;
     background: white;
-    border-radius: 1.25rem;
+    border-radius: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     font-weight: 700;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     transition: all 0.2s;
@@ -200,49 +200,4 @@ input:focus {
 
 .tab-page {
     padding-bottom: 60px;
-}
-
-/* Background Animation */
-#bg-animation-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
-    overflow: hidden;
-}
-
-.petal {
-    position: absolute;
-    background-color: #ffdeeb;
-    border-radius: 150% 0 150% 0;
-    opacity: 0.6;
-    z-index: -1;
-    animation: petal-fall linear infinite, petal-shake ease-in-out infinite;
-}
-
-@keyframes petal-fall {
-    0% {
-        top: -10%;
-        transform: rotate(0deg);
-    }
-
-    100% {
-        top: 110%;
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes petal-shake {
-
-    0%,
-    100% {
-        margin-left: 0px;
-    }
-
-    50% {
-        margin-left: 50px;
-    }
 }
