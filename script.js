@@ -301,8 +301,8 @@ async function fetchWeather() {
 
     for (const city of cities) {
         try {
-            // Open-Meteo 請求 URL，包含即時天氣與 7 日預報（我們取前 3 日）
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto`;
+            // Open-Meteo 請求 URL，包含即時天氣、每日概況 (用於今天降雨機率) 與 72 小時逐時預報
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current_weather=true&daily=precipitation_probability_max&hourly=temperature_2m,precipitation_probability,weathercode&timezone=auto&forecast_days=3`;
 
             const res = await fetch(url);
             if (!res.ok) throw new Error(`API error: ${res.status}`);
@@ -329,11 +329,12 @@ function renderWeatherUI(containerId, data) {
 
     const current = data.current_weather;
     const daily = data.daily;
+    const hourly = data.hourly;
     const temp = Math.round(current.temperature);
     const weatherCode = current.weathercode;
     const weatherDesc = getWmoWeatherDesc(weatherCode);
 
-    // 取得今天的降雨機率 (daily.precipitation_probability_max[0])
+    // 取得今天的最高降雨機率 (daily.precipitation_probability_max[0])
     const rainChance = daily.precipitation_probability_max[0] || 0;
     const obsTime = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
 
@@ -343,41 +344,58 @@ function renderWeatherUI(containerId, data) {
                 <span class="text-6xl font-black tracking-tighter shrink-0">${temp}<sup class="text-3xl ml-1">° C</sup></span>
                 <div class="text-right min-w-0">
                      <span class="block text-xl font-bold mb-1">${weatherDesc}</span>
-                     <span class="block text-sm font-medium opacity-90">降雨機率 ${rainChance}%</span>
+                     <span class="block text-sm font-medium opacity-90">今日降雨機率 ${rainChance}%</span>
                 </div>
             </div>
             <div class="text-[12px] text-white/60 mb-2 font-medium">觀測時間：今天 ${obsTime}</div>
         </div>
 
-        <div class="space-y-5 pt-6 border-t border-white/20">
-            <span class="block text-xs font-black text-white/50 uppercase tracking-[0.2em] mb-4">未來 3 日預報</span>
+        <div class="pt-6 border-t border-white/20">
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-black text-white/50 uppercase tracking-[0.2em]">未來 3 日逐時預報</span>
+                <span class="text-[10px] text-white/40"><i class="fas fa-arrows-left-right mr-1"></i> 左右滑動</span>
+            </div>
+            
+            <div class="flex overflow-x-auto gap-4 pb-4 hide-scrollbar -mx-2 px-2">
     `;
 
-    // 渲染未來三天預報
-    for (let i = 0; i < 3; i++) {
-        const dateStr = daily.time[i].split('-').slice(1).join('/'); // MM/DD
-        const code = daily.weathercode[i];
-        const desc = getWmoWeatherDesc(code);
-        const maxT = Math.round(daily.temperature_2m_max[i]);
-        const minT = Math.round(daily.temperature_2m_min[i]);
-        const prob = daily.precipitation_probability_max[i];
+    // 渲染未來逐時預報 (取前 72 個小時)
+    const now = new Date();
+    const currentHourStr = now.getHours();
+
+    for (let i = 0; i < hourly.time.length; i++) {
+        const timeObj = new Date(hourly.time[i]);
+        
+        // 跳過過去的小時，只顯示從現在開始的預報
+        if (timeObj < new Date(now.getTime() - 60 * 60 * 1000)) continue;
+
+        const hour = timeObj.getHours();
+        const dateStr = `${timeObj.getMonth() + 1}/${timeObj.getDate()}`;
+        const code = hourly.weathercode[i];
+        const hTemp = Math.round(hourly.temperature_2m[i]);
+        const hProb = hourly.precipitation_probability[i];
+        
+        // 判斷是否為跨日的第一個小時或是今天
+        const isNewDay = hour === 0;
+        const displayTime = hour === 0 ? `<span class="text-sky-300">${dateStr}</span>` : `${hour}:00`;
 
         html += `
-            <div class="flex items-center justify-between text-white py-1">
-                <span class="text-base font-black w-14">${dateStr}</span>
-                <div class="flex items-center gap-3 flex-1 justify-center">
-                    <i class="fas ${getWeatherIcon(code)} text-lg opacity-90"></i>
-                    <span class="text-sm font-bold">${desc}</span>
-                </div>
-                <div class="text-base font-black text-right w-28">
-                    <span>${minT}°</span> / <span>${maxT}°</span><sup class="text-[10px] ml-0.5">C</sup>
-                    <span class="text-[11px] block opacity-70 font-bold mt-0.5 ml-1">☔ ${prob}%</span>
+            <div class="flex-shrink-0 flex flex-col items-center bg-white/10 backdrop-blur-md rounded-2xl py-4 px-3 min-w-[70px] border border-white/5">
+                <span class="text-[11px] font-bold text-white/70 mb-2">${displayTime}</span>
+                <i class="fas ${getWeatherIcon(code)} text-lg text-white mb-2"></i>
+                <span class="text-base font-black text-white mb-1">${hTemp}°</span>
+                <div class="flex items-center gap-0.5 text-[10px] text-sky-200 font-bold">
+                    <i class="fas fa-droplet scale-75"></i> ${hProb}%
                 </div>
             </div>
         `;
     }
 
-    html += `</div>`;
+    html += `
+            </div>
+        </div>
+    `;
+    container.innerHTML = html;
     container.innerHTML = html;
 }
 
