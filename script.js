@@ -339,7 +339,7 @@ function renderWeatherUI(containerId, data) {
     let html = `
         <div class="mb-8">
             <div class="flex items-center justify-between mb-4 text-white gap-8">
-                <span class="text-6xl font-black tracking-tighter shrink-0">${temp}°<sup class="text-3xl ml-1">C</sup></span>
+                <span class="text-6xl font-black tracking-tighter shrink-0">${temp}<sup class="text-3xl ml-1">°C</sup></span>
                 <div class="text-right min-w-0">
                      <span class="block text-xl font-bold mb-1">${weatherDesc}</span>
                      <span class="block text-sm font-medium opacity-90">降雨機率 ${rainChance}%</span>
