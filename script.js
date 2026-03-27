@@ -356,7 +356,7 @@ function renderWeatherUI(containerId, data) {
                 <span class="text-[10px] text-white/40"><i class="fas fa-arrows-left-right mr-1"></i> 左右滑動</span>
             </div>
             
-            <div class="flex overflow-x-auto gap-4 pb-4 hide-scrollbar -mx-2 px-2">
+            <div class="flex overflow-x-auto gap-4 pb-4 hide-scrollbar -mx-2 px-2 w-full">
     `;
 
     // 渲染未來逐時預報 (取前 72 個小時)
