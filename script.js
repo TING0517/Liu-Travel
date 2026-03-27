@@ -1,7 +1,7 @@
 // --- DATA ---
 const itinerary = {
     1: [
-        { time: "08:00", text: "飯店放行李-Toyoko Inn 釜山海雲臺", stay: "15分", type: "hotel" },
+        { time: "08:00", text: "飯店放行李-Toyoko Inn 釜山海雲2", stay: "15分", type: "hotel" },
         { time: "08:20", text: "早餐-密陽血腸豬肉湯飯 海雲台店", stay: "1小時", type: "food" },
         { time: "09:25", text: "換錢-MONEYBOX HAEUNDAE", stay: "15分" },
         { time: "09:40", text: "海雲台海灘", stay: "20分" },
@@ -25,7 +25,7 @@ const itinerary = {
         { time: "18:00", text: "晚餐、休息-SPA LAND 汗蒸幕", stay: "4小時" }
     ],
     3: [
-        { time: "08:30", text: "行李寄放-東橫INN 釜山中央站" },
+        { time: "08:30", text: "行李寄放-Toyoko Inn 釜山中央店" },
         { time: "10:00", text: "松島纜車、龍宮雲橋", stay: "2.5小時" },
         { time: "12:30", text: "松島天空步道", stay: "20分" },
         { time: "13:30", text: "午餐-國際炸雞 富平本店", type: "food" },
@@ -54,7 +54,7 @@ const itinerary = {
         { time: "14:25", text: "東山海水川櫻花路", stay: "1小時" },
         { time: "15:40", text: "下午茶-P.ARK", type: "food", stay: "1.5小時" },
         { time: "17:15", text: "晚餐-豆田裡", type: "food", stay: "1.5小時" },
-        { time: "19:00", text: "拿行李-東橫INN 釜山中央站" },
+        { time: "19:00", text: "拿行李-Toyoko Inn 釜山中央站" },
         { time: "19:30", text: "搭 SRT / KTX 至東大邱", highlight: true }
     ],
     7: [
@@ -70,8 +70,8 @@ const itinerary = {
 };
 
 const hotels = {
-    1: "東橫inn釜山海雲台2", 2: "東橫inn釜山海雲台2",
-    3: "東橫inn釜山中央店", 4: "東橫inn釜山中央店", 5: "東橫inn釜山中央店",
+    1: "Toyoko Inn 釜山海雲臺2", 2: "Toyoko Inn 釜山海雲臺2",
+    3: "Toyoko Inn 釜山中央店", 4: "Toyoko Inn 釜山中央店", 5: "Toyoko Inn 釜山中央店",
     6: "大邱水晶飯店", 7: "回溫暖的家 ✈️"
 };
 
@@ -340,7 +340,7 @@ function renderWeatherUI(containerId, data) {
     let html = `
         <div class="mb-8">
             <div class="flex items-center justify-between mb-4 text-white gap-8">
-                <span class="text-6xl font-black tracking-tighter shrink-0">${temp}<sup class="text-3xl ml-1">°C</sup></span>
+                <span class="text-6xl font-black tracking-tighter shrink-0">${temp}<sup class="text-3xl ml-1">° C</sup></span>
                 <div class="text-right min-w-0">
                      <span class="block text-xl font-bold mb-1">${weatherDesc}</span>
                      <span class="block text-sm font-medium opacity-90">降雨機率 ${rainChance}%</span>
