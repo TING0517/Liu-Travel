@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>記帳本 - 2026釜山海岸賞櫻之旅</title>
+
+    <!-- Google Fonts: Quicksand & Noto Sans TC -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Quicksand:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- PWA Settings -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="釜山賞櫻">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#0077B6">
+
+    <style>
+        .expense-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .expense-card:active {
+            transform: scale(0.98);
+        }
+
+        .modal-backdrop {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(8px);
+        }
+
+        .form-input {
+            width: 100%;
+            background: #f8fafc;
+            border: 2px solid #f1f5f9;
+            border-radius: 1rem;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            background: white;
+            border-color: #0077B6;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(0, 119, 182, 0.1);
+        }
+
+        .currency-toggle {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 12px;
+            gap: 4px;
+        }
+
+        .currency-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            transition: all 0.2s;
+            color: #94a3b8;
+        }
+
+        .currency-btn.active {
+            background: white;
+            color: #0077B6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .fx-btn {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .fx-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+
+<body class="pb-32">
+
+    <!-- Header / Stats Section -->
+    <header class="coastal-gradient pt-6 pb-12 px-6 rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
+        <div class="relative z-10 flex flex-col gap-6">
+            <div class="flex justify-between items-center px-1">
+                <div class="flex items-center gap-4">
+                    <h1 class="text-3xl font-bold text-white tracking-tight drop-shadow-md">旅程記帳</h1>
+                    <button onclick="changeFxRate()" id="fx-display" class="fx-btn">
+                        匯率 1 : 46
+                    </button>
+                </div>
+                <button onclick="openModal()"
+                    class="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-2xl font-bold flex items-center gap-2 transition-all active:scale-95">
+                    <i class="fas fa-plus-circle"></i> 新增支出
+                </button>
+            </div>
+
+            <!-- Total Card -->
+            <div class="glass-card p-6 rounded-3xl border-white/20 shadow-2xl space-y-4">
+                <!-- 第一列：總支出與台幣換算 -->
+                <div class="flex justify-between items-start">
+                    <div class="flex flex-col">
+                        <span
+                            class="text-slate-400 text-sm font-black uppercase tracking-widest leading-none mb-2 px-1">目前總支出</span>
+                        <div class="flex items-baseline gap-1">
+                            <span id="total-krw" class="text-3xl font-black text-slate-800 tracking-tighter">0</span>
+                            <span class="text-slate-400 text-sm font-bold uppercase">KRW</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col text-right">
+                        <span
+                            class="text-slate-400 text-sm font-black uppercase tracking-widest leading-none mb-2 px-1">約台幣</span>
+                        <div class="flex items-baseline gap-1 text-sky-700">
+                            <span id="total-twd" class="text-3xl font-black">0</span>
+                            <span class="text-xs font-bold uppercase opacity-70">TWD</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="h-px bg-slate-100 w-full opacity-50"></div>
+
+                <!-- 第二列：代付金額 (排版與總支出相同) -->
+                <div class="flex justify-between items-start">
+                    <div class="flex flex-col">
+                        <span
+                            class="text-indigo-400 text-sm font-black uppercase tracking-widest leading-none mb-2 px-1">代付金額
+                            (總計)</span>
+                        <div class="flex items-baseline gap-1">
+                            <span id="behalf-krw" class="text-3xl font-black text-indigo-500 tracking-tighter">0</span>
+                            <span class="text-indigo-400 text-sm font-bold uppercase">KRW</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col text-right">
+                        <span
+                            class="text-indigo-400 text-sm font-black uppercase tracking-widest leading-none mb-2 px-1">約台幣</span>
+                        <div class="flex items-baseline gap-1 text-indigo-400">
+                            <span id="behalf-twd" class="text-3xl font-black">0</span>
+                            <span class="text-xs font-bold uppercase opacity-70">TWD</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wave Decorations -->
+        <svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28" preserveAspectRatio="none"
+            shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+                <use href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use href="#gentle-wave" x="48" y="7" fill="#f0faff" />
+            </g>
+        </svg>
+    </header>
+
+    <!-- Expense List Page -->
+    <main class="px-5 -mt-8 relative z-20">
+        <div id="expense-container" class="space-y-4">
+            <!-- Loading State -->
+            <div class="text-center py-20 text-slate-400">
+                <i class="fas fa-circle-notch fa-spin text-3xl mb-4"></i>
+                <p class="text-sm font-bold">同步雲端資料中...</p>
+            </div>
+        </div>
+        <div class="h-20"></div>
+    </main>
+
+    <!-- New/Edit Modal -->
+    <div id="expense-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="modal-backdrop absolute inset-0" onclick="closeModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[2.5rem] shadow-2xl p-8 transform transition-transform duration-300 translate-y-full"
+            id="modal-content">
+            <div class="flex justify-between items-center mb-8">
+                <h3 id="modal-title" class="text-2xl font-black text-slate-800">新增支出項目</h3>
+                <button onclick="closeModal()" class="text-slate-300 hover:text-slate-500">
+                    <i class="fas fa-times-circle text-2xl"></i>
+                </button>
+            </div>
+
+            <form id="expense-form" class="space-y-6">
+                <input type="hidden" id="entry-id">
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">日期</label>
+                    <input type="date" id="entry-date" class="form-input" required>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">項目名稱</label>
+                    <input type="text" id="entry-name" class="form-input" placeholder="例如：炸雞早餐、車票" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <div class="flex flex-col justify-end h-12 ml-1">
+                            <label id="price-label"
+                                class="text-xs font-black text-slate-400 uppercase tracking-widest leading-none mb-2">金額
+                                (KRW)</label>
+                            <div class="currency-toggle w-fit">
+                                <button type="button" onclick="setCurrency('KRW')" id="btn-krw"
+                                    class="currency-btn active px-3">KRW</button>
+                                <button type="button" onclick="setCurrency('TWD')" id="btn-twd"
+                                    class="currency-btn px-3">TWD</button>
+                            </div>
+                        </div>
+                        <input type="number" id="entry-price" class="form-input h-[52px]" placeholder="0" required>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex flex-col justify-end h-12 ml-1">
+                            <label id="calc-label"
+                                class="text-xs font-black text-slate-400 uppercase tracking-widest leading-none mb-2">換算台幣</label>
+                            <div class="h-[28px]"></div> <!-- Placeholder for currency toggle height -->
+                        </div>
+                        <div
+                            class="form-input bg-slate-100 flex items-center justify-end font-bold text-slate-500 h-[52px]">
+                            ≈ <span id="modal-calc-res" class="ml-1">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border-2 border-slate-100/50">
+                    <input type="checkbox" id="entry-behalf" class="w-5 h-5 accent-sky-600 rounded">
+                    <label for="entry-behalf" class="text-sm font-black text-slate-600 cursor-pointer">此筆款項為「代付」</label>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">備註
+                        (可選)</label>
+                    <input type="text" id="entry-remark" class="form-input" placeholder="想記點什麼...">
+                </div>
+
+                <div class="pt-4 flex flex-col gap-3">
+                    <button type="submit"
+                        class="w-full bg-sky-600 text-white py-4 rounded-2xl font-black shadow-lg shadow-sky-600/30 active:scale-95 transition-all">
+                        儲存支出
+                    </button>
+                    <button type="button" id="delete-btn" onclick="deleteEntry()"
+                        class="w-full bg-red-50 text-red-500 py-4 rounded-2xl font-bold active:scale-95 transition-all hidden">
+                        <i class="fas fa-trash-alt mr-2"></i> 刪除此筆
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav
+        class="fixed bottom-3 left-8 right-8 h-20 bg-white/90 backdrop-blur-xl border border-white/40 rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,119,182,0.15)] z-50 flex items-center justify-around px-4">
+        <a href="index.html" class="nav-btn text-slate-400 flex flex-col items-center gap-1 transition-all">
+            <i class="fas fa-calendar-alt text-2xl"></i>
+            <span class="text-[11px] font-bold">行程</span>
+        </a>
+        <a href="guide.html" class="nav-btn text-slate-400 flex flex-col items-center gap-1 transition-all">
+            <i class="fas fa-map-marked-alt text-2xl"></i>
+            <span class="text-[11px] font-bold">導覽</span>
+        </a>
+        <a href="wallet.html" class="nav-btn text-slate-400 flex flex-col items-center gap-1 transition-all">
+            <i class="fas fa-calculator text-2xl"></i>
+            <span class="text-[11px] font-bold">計算機</span>
+        </a>
+        <a href="ledger.html" class="nav-btn nav-active flex flex-col items-center gap-1 transition-all">
+            <i class="fas fa-receipt text-2xl"></i>
+            <span class="text-[11px] font-bold">記帳</span>
+        </a>
+        <a href="weather.html" class="nav-btn text-slate-400 flex flex-col items-center gap-1 transition-all">
+            <i class="fas fa-cloud-sun text-2xl"></i>
+            <span class="text-[11px] font-bold">天氣</span>
+        </a>
+    </nav>
+
+    <!-- Scripts -->
+    <!--Firebase SDK -->
+    <script type="module" src="ledger.js"></script>
+</body>
+
+</html>
