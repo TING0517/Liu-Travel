@@ -1,4 +1,4 @@
-const CACHE_NAME = 'busan-travel-v1.3'; // 每次更新程式碼後，請修改此版本號
+const CACHE_NAME = 'busan-travel-v1.4'; // 每次更新程式碼後，請修改此版本號
 
 const ASSETS = [
   './',

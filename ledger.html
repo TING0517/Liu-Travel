@@ -108,11 +108,9 @@
     <header class="coastal-gradient pt-6 pb-12 px-6 rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
         <div class="relative z-10 flex flex-col gap-6">
             <div class="flex justify-between items-center px-1">
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-4 cursor-pointer active:opacity-70 transition-opacity"
+                    onclick="changeFxRate()">
                     <h1 class="text-3xl font-bold text-white tracking-tight drop-shadow-md">旅程記帳</h1>
-                    <button onclick="changeFxRate()" id="fx-display" class="fx-btn">
-                        匯率 1 : 46
-                    </button>
                 </div>
                 <button onclick="openModal()"
                     class="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-2xl font-bold flex items-center gap-2 transition-all active:scale-95">
@@ -128,7 +126,7 @@
                         <span
                             class="text-slate-400 text-sm font-black uppercase tracking-widest leading-none mb-2 px-1">目前總支出</span>
                         <div class="flex items-baseline gap-1">
-                            <span id="total-krw" class="text-3xl font-black text-slate-800 tracking-tighter">0</span>
+                            <span id="total-krw" class="text-xl font-black text-slate-800 tracking-tighter">0</span>
                             <span class="text-slate-400 text-sm font-bold uppercase">KRW</span>
                         </div>
                     </div>
@@ -136,7 +134,7 @@
                         <span
                             class="text-slate-400 text-sm font-black uppercase tracking-widest leading-none mb-2 px-1">約台幣</span>
                         <div class="flex items-baseline gap-1 text-sky-700">
-                            <span id="total-twd" class="text-3xl font-black">0</span>
+                            <span id="total-twd" class="text-xl font-black">0</span>
                             <span class="text-xs font-bold uppercase opacity-70">TWD</span>
                         </div>
                     </div>
@@ -151,7 +149,7 @@
                             class="text-indigo-400 text-sm font-black uppercase tracking-widest leading-none mb-2 px-1">代付金額
                             (總計)</span>
                         <div class="flex items-baseline gap-1">
-                            <span id="behalf-krw" class="text-3xl font-black text-indigo-500 tracking-tighter">0</span>
+                            <span id="behalf-krw" class="text-xl font-black text-indigo-500 tracking-tighter">0</span>
                             <span class="text-indigo-400 text-sm font-bold uppercase">KRW</span>
                         </div>
                     </div>
@@ -159,7 +157,7 @@
                         <span
                             class="text-indigo-400 text-sm font-black uppercase tracking-widest leading-none mb-2 px-1">約台幣</span>
                         <div class="flex items-baseline gap-1 text-indigo-400">
-                            <span id="behalf-twd" class="text-3xl font-black">0</span>
+                            <span id="behalf-twd" class="text-xl font-black">0</span>
                             <span class="text-xs font-bold uppercase opacity-70">TWD</span>
                         </div>
                     </div>
@@ -184,6 +182,11 @@
 
     <!-- Expense List Page -->
     <main class="px-5 -mt-8 relative z-20">
+        <!-- Day Selector (Dynamic) -->
+        <div class="flex gap-4 overflow-x-auto px-1 pt-8 pb-6 hide-scrollbar snap-x mb-2 mt-6" id="day-selector">
+            <!-- Buttons will be injected by ledger.js -->
+        </div>
+
         <div id="expense-container" class="space-y-4">
             <!-- Loading State -->
             <div class="text-center py-20 text-slate-400">

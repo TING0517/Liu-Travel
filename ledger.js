@@ -15,6 +15,18 @@ try {
 let fxRate = 46;
 let expenses = [];
 let currentCurrency = 'KRW';
+let activeFilterDate = 'all';
+let initialLoadDone = false;
+
+const TRIP_DATES = {
+    '2026-03-29': 'D1',
+    '2026-03-30': 'D2',
+    '2026-03-31': 'D3',
+    '2026-04-01': 'D4',
+    '2026-04-02': 'D5',
+    '2026-04-03': 'D6',
+    '2026-04-04': 'D7'
+};
 
 // --- UTILS ---
 function getSavedFxRate() {
@@ -73,10 +85,26 @@ function renderExpenses() {
         return;
     }
 
-    // 按日期分組 (雖然已經 orderBy，但顯示時分組更漂亮)
+    // 過濾邏輯
+    let groupedExpenses = expenses;
+    if (activeFilterDate !== 'all') {
+        groupedExpenses = expenses.filter(item => item.date === activeFilterDate);
+    }
+
+    if (groupedExpenses.length === 0) {
+        container.innerHTML = `
+            <div class="glass-card p-10 mt-1 rounded-3xl text-center text-slate-400">
+                <i class="fas fa-calendar-day text-5xl mb-4 opacity-20"></i>
+                <p class="font-bold">${activeFilterDate === 'all' ? '目前還沒有任何支出喔' : '此日期尚無支出項目喔'}<br>點擊上方按鈕開始記帳吧！</p>
+            </div>
+        `;
+        return;
+    }
+
+    // 按日期分組
     const groups = {};
-    expenses.forEach(item => {
-        const d = item.date; // yyyy-mm-dd
+    groupedExpenses.forEach(item => {
+        const d = item.date;
         if (!groups[d]) groups[d] = [];
         groups[d].push(item);
     });
@@ -84,24 +112,25 @@ function renderExpenses() {
     const sortedDates = Object.keys(groups).sort((a, b) => a.localeCompare(b));
 
     container.innerHTML = sortedDates.map(date => `
-        <div class="mb-6 mt-12">
+        <div class="mb-6">
             <div class="flex items-center gap-3 mb-3 ml-2">
                 <span class="text-sm font-black text-slate-400 uppercase tracking-widest">${date.replace(/-/g, '/')}</span>
                 <div class="h-px bg-slate-200 flex-1"></div>
             </div>
             <div class="space-y-3">
                 ${groups[date].map(item => {
-                    const twdAmount = item.currency === 'TWD' ? item.originalPrice : Math.round(item.price / fxRate);
-                    const krwAmount = item.price;
-                    const isOnBehalf = item.isOnBehalf === true;
+        const twdAmount = item.currency === 'TWD' ? item.originalPrice : Math.round(item.price / fxRate);
+        const krwAmount = item.price;
+        const isOnBehalf = item.isOnBehalf === true;
 
-                    return `
+        return `
                     <div class="glass-card expense-card p-5 rounded-[2rem] flex items-center justify-between border-white/40 shadow-sm relative group">
                         <div class="flex items-center gap-4 flex-1 min-w-0">
-                            <div class="w-12 h-12 rounded-2xl ${isOnBehalf ? 'bg-indigo-50 text-indigo-500' : 'bg-sky-50 text-sky-600'} flex items-center justify-center shrink-0">
-                                <i class="fas ${isOnBehalf ? 'fa-hand-holding-dollar' : 'fa-shopping-bag'} text-xl"></i>
-                            </div>
                             <div class="min-w-0">
+                                ${isOnBehalf ? `
+                                <div class="inline-flex items-center px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-500 text-[10px] font-black uppercase tracking-wider mb-1.5 border border-indigo-100/50">
+                                    <i class="fas fa-hand-holding-dollar mr-1"></i> 代付
+                                </div>` : ''}
                                 <h4 class="font-bold text-slate-800 truncate flex items-center gap-2 text-lg">
                                     ${item.name}
                                 </h4>
@@ -113,9 +142,10 @@ function renderExpenses() {
                                 <div class="font-black ${isOnBehalf ? 'text-indigo-600' : 'text-slate-800'} text-xl">
                                     <span class="text-xs text-slate-400 font-bold mr-1">TWD</span> ${formatNumber(twdAmount)}
                                 </div>
+                                ${item.currency === 'KRW' ? `
                                 <div class="text-sm font-bold text-slate-400">
                                     ${formatNumber(krwAmount)} <span class="text-[10px] uppercase font-bold">KRW</span>
-                                </div>
+                                </div>` : ''}
                             </div>
                             <button onclick="window.openEditModal('${item.id}')" class="w-10 h-10 rounded-xl bg-slate-50 text-slate-300 hover:text-sky-600 hover:bg-sky-50 transition-all active:scale-90">
                                 <i class="fas fa-pen text-sm"></i>
@@ -127,6 +157,42 @@ function renderExpenses() {
         </div>
     `).join('');
     updateTotals();
+}
+
+function renderDaySelector() {
+    const selector = document.getElementById('day-selector');
+    if (!selector) return;
+
+    // 取得所有有支出的日期，並與旅程基準日合併
+    const expenseDates = [...new Set(expenses.map(item => item.date))];
+    const allDates = [...new Set([...Object.keys(TRIP_DATES), ...expenseDates])];
+    allDates.sort((a, b) => a.localeCompare(b));
+
+    let html = `
+        <button onclick="setFilterDate('all')" 
+            class="ledger-day-btn snap-center flex-shrink-0 px-6 py-4 rounded-3xl bg-white shadow-sm border border-slate-100 min-w-[90px] font-bold text-center ${activeFilterDate === 'all' ? 'active-day' : ''}" 
+            data-date="all">
+            <span class="block text-[14px] opacity-50 uppercase mb-1">ALL</span>
+            全部
+        </button>
+    `;
+
+    allDates.forEach(date => {
+        const dayLabel = TRIP_DATES[date] || 'EXTRA';
+        const dateParts = date.split('-');
+        const displayDate = dateParts.length >= 3 ? `${parseInt(dateParts[1])}/${parseInt(dateParts[2])}` : date;
+
+        html += `
+            <button onclick="setFilterDate('${date}')" 
+                class="ledger-day-btn snap-center flex-shrink-0 px-6 py-4 rounded-3xl bg-white shadow-sm border border-slate-100 min-w-[90px] font-bold text-center ${activeFilterDate === date ? 'active-day' : ''}" 
+                data-date="${date}">
+                <span class="block text-[14px] opacity-50 uppercase mb-1">${dayLabel}</span>
+                ${displayDate}
+            </button>
+        `;
+    });
+
+    selector.innerHTML = html;
 }
 
 // --- MODAL LOGIC ---
@@ -203,6 +269,28 @@ window.setCurrency = function (cur) {
     const val = parseFloat(document.getElementById('entry-price').value) || 0;
     const res = cur === 'KRW' ? Math.round(val / fxRate) : Math.round(val * fxRate);
     document.getElementById('modal-calc-res').innerText = formatNumber(res);
+}
+
+window.setFilterDate = function (date) {
+    activeFilterDate = date;
+
+    // 更新橫向捲軸按鈕狀態
+    document.querySelectorAll('.ledger-day-btn').forEach(btn => {
+        if (btn.dataset.date === date) {
+            btn.classList.add('active-day');
+        } else {
+            btn.classList.remove('active-day');
+        }
+    });
+
+    renderExpenses();
+}
+
+function scrollToActiveDate() {
+    const activeBtn = document.querySelector('.ledger-day-btn.active-day');
+    if (activeBtn) {
+        activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
 }
 
 // Real-time calculation in modal
@@ -292,7 +380,22 @@ function init() {
                 return timeA - timeB;
             });
 
+            renderDaySelector();
             renderExpenses();
+
+            // 首次讀取後，自動對應當天日期
+            if (!initialLoadDone) {
+                const today = new Date().toISOString().split('T')[0];
+                const hasTodayBtn = document.querySelector(`[data-date="${today}"]`);
+                if (hasTodayBtn) {
+                    window.setFilterDate(today);
+                    setTimeout(scrollToActiveDate, 100);
+                } else {
+                    // 如果今天不在列表中，則選取全部並置中滾動
+                    setTimeout(scrollToActiveDate, 100);
+                }
+                initialLoadDone = true;
+            }
         }, (err) => {
             console.error("Fetch failed", err);
             document.getElementById('expense-container').innerHTML = `
