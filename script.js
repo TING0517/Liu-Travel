@@ -38,13 +38,13 @@ const itinerary = {
         { time: "14:00", text: "BIFF 廣場", stay: "3小時" },
         { time: "15:30", text: "南川洞櫻花路", highlight: true },
         { time: "15:30", text: "廣安里海水浴場", stay: "3小時" },
-        { time: "18:00", text: "晚餐-匠人鐵板雞 ＆ 西面巡禮", type: "food" }
+        { time: "18:30", text: "晚餐-明倫進士烤肉 ", type: "food" }
     ],
     5: [
         { time: "09:30", text: "釜山至鎮海", highlight: true },
         { time: "11:00", text: "慶和站公園 (櫻花鐵道)", stay: "1.5小時" },
         { time: "13:00", text: "余佐川櫻花徑", stay: "3.5小時" },
-        { time: "18:00", text: "晚餐-明倫進士烤肉 ＆ 西面巡禮 ", type: "food" }
+        { time: "18:00", text: "晚餐-匠人鐵板雞 ＆ 西面巡禮", type: "food" }
     ],
     6: [
         { time: "09:00", text: "太宗台", stay: "3小時" },
