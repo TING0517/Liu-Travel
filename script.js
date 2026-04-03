@@ -47,21 +47,22 @@ const itinerary = {
         { time: "18:00", text: "晚餐-匠人鐵板雞 ＆ 西面巡禮", type: "food" }
     ],
     6: [
-        { time: "10:00", text: "太宗台", stay: "3小時" },
-        { time: "13:30", text: "午餐-影島海女村", type: "food" },
-        { time: "15:30", text: "下午茶-P.ARK", type: "food", stay: "1.5小時" },
-        { time: "17:30", text: "晚餐-Lee Jae Mo Pizza-釜山站店", type: "food", stay: "1小時" },
-        { time: "19:00", text: "拿行李-Toyoko Inn 釜山中央站" },
-        { time: "19:30", text: "搭 SRT / KTX 至東大邱", highlight: true }
+        { time: "09:30", text: "太宗台", stay: "2小時" },
+        { time: "12:00", text: "午餐-影島海女村", type: "food" },
+        { time: "13:00", text: "東三海水泉櫻花路", stay: "1小時" },
+        { time: "14:00", text: "下午茶-P.ARK", type: "food", stay: "1.5小時" },
+        { time: "16:30", text: "拿行李-Toyoko Inn 釜山中央站" },
+        { time: "16:50", text: "搭 SRT / KTX 至東大邱", highlight: true },
+        { time: "19:00", text: "晚餐-Shake Shack", type: "food"}
     ],
     7: [
-        { time: "11:00", text: "大邱近代胡同 (青蘿丘、大邱第一教會、三一運動路、桂山聖堂)" },
-        { time: "13:00", text: "午餐-巨松燉排骨", type: "food" },
-        { time: "14:15", text: "藥令市韓醫藥博物館" },
-        { time: "15:00", text: "下午茶-星巴克鐘路古宅店" },
-        { time: "16:20", text: "大邱中央站周邊商圈" },
-        { time: "18:00", text: "晚餐-PURADAK CHICKEN / 大邱美食", type: "food", stay: "1.5小時" },
-        { time: "19:20", text: "拿行李-大邱水晶飯店" },
+        { time: "10:30", text: "大邱近代胡同 (青蘿丘、大邱第一教會、三一運動路、桂山聖堂)" },
+        { time: "12:00", text: "午餐-巨松燉排骨", type: "food" },
+        { time: "13:30", text: "藥令市韓醫藥博物館" },
+        { time: "14:00", text: "下午茶-星巴克鐘路古宅店" , stay: "1.5小時"},
+        { time: "16:00", text: "西門市場" },
+        { time: "17:30", text: "晚餐-PURADAK CHICKEN / 大邱美食", type: "food", stay: "1.5小時" },
+        { time: "19:00", text: "拿行李-大邱水晶飯店" },
         { time: "20:20", text: "抵達大邱國際機場" }
     ]
 };
