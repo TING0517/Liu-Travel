@@ -1,15 +1,25 @@
-const CACHE_NAME = 'busan-travel-v1.6'; // 每次更新程式碼後，請修改此版本號
+const CACHE_NAME = 'travel-v2.0'; // 每次更新程式碼後，請修改此版本號
 
 const ASSETS = [
   './',
   'index.html',
-  'guide.html',
   'wallet.html',
   'ledger.html',
   'weather.html',
+  'calculator.html',
+  'history.html',
+  'history_index.html',
+  'history_ledger.html',
   'style.css',
   'script.js',
-  'icon.png'
+  'calculator.js',
+  'firebase-config.js',
+  'history_index.js',
+  'history_ledger.js',
+  'manifest.json',
+  'icon.png',
+  'data/config.js',
+  'data/theme-manager.js'
 ];
 
 // 安裝時立即接管
@@ -36,7 +46,7 @@ self.addEventListener('activate', (event) => {
         })
       );
     }).then(() => {
-        return self.clients.claim(); // 強制接管所有頁面
+      return self.clients.claim(); // 強制接管所有頁面
     })
   );
 });

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>歷史行程資訊 - 旅遊小幫手</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Quicksand:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="data/theme-manager.js"></script>
+
+    <style>
+        /* 歷史模式專屬樣式 */
+        .history-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .active-day {
+            background: #0ea5e9 !important;
+            color: white !important;
+            border-color: #0ea5e9 !important;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.2) !important;
+        }
+
+        .active-day span {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+    </style>
+</head>
+
+<body class="pb-32 bg-slate-50">
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="loader-spinner"></div>
+        <div class="loading-text">雲端資料庫讀取中</div>
+    </div>
+
+    <!-- Header & Flight Info (Cloned from index.html but dynamic) -->
+    <header class="coastal-gradient text-white pt-8 pb-12 px-6 rounded-b-[2.5rem] shadow-2xl relative overflow-hidden">
+        <div class="relative z-10 mb-6">
+            <span class="history-badge">歷史紀錄模式</span>
+            <h1 id="trip-name" class="text-3xl font-black mb-1 tracking-tight drop-shadow-md">載入中...</h1>
+            <p id="trip-date" class="text-white/70 text-xs font-medium flex items-center gap-2">
+                <i class="fas fa-calendar-day"></i> 載入中...
+            </p>
+        </div>
+
+        <!-- Dynamic Flight Grid -->
+        <div id="flight-grid" class="grid grid-cols-1 gap-2 relative z-10">
+            <!-- Flights will be injected by history_index.js -->
+        </div>
+
+        <!-- Waves SVG -->
+        <svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28" preserveAspectRatio="none"
+            shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+                <use href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use href="#gentle-wave" x="48" y="7" fill="#f8fafc" />
+            </g>
+        </svg>
+    </header>
+
+    <!-- Main Content -->
+    <main class="px-4 mt-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold text-slate-800">歷史行程</h2>
+            <div class="text-sm bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full font-bold">Day <span
+                    id="current-day-label">1</span></div>
+        </div>
+
+        <!-- Day Selector -->
+        <div id="day-selector" class="flex gap-4 overflow-x-auto px-1 pt-4 pb-6 hide-scrollbar snap-x mb-2">
+            <!-- Buttons will be injected by history_index.js -->
+        </div>
+
+        <!-- Itinerary List -->
+        <div id="itinerary-container" class="space-y-8 relative ml-2 mt-4">
+            <!-- Content will be injected by history_index.js -->
+        </div>
+
+        <!-- Accommodation Card -->
+        <div id="accommodation-card" class="mt-12 p-6 bg-orange-50 border border-orange-100 rounded-[2.5rem]">
+            <div class="flex items-center gap-3 mb-3 text-orange-700">
+                <i class="fas fa-hotel text-xl"></i>
+                <h3 class="font-bold text-lg">該晚住宿</h3>
+            </div>
+            <p id="hotel-name" class="text-slate-800 font-bold text-xl">載入中...</p>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="main-nav">
+        <a href="history.html" class="nav-item">
+            <i class="fas fa-list-ul"></i>
+            <span>回選單</span>
+        </a>
+        <a href="index.html" class="nav-item-home">
+            <div class="nav-home-icon">
+                <i class="fas fa-home"></i>
+            </div>
+        </a>
+        <a id="nav-link-ledger" href="#" class="nav-item active">
+            <i class="fas fa-receipt"></i>
+            <span>記帳</span>
+        </a>
+    </nav>
+
+    <script type="module" src="history_index.js"></script>
+</body>
+
+</html>

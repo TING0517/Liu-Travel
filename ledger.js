@@ -1,6 +1,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, deleteDoc, doc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 import { firebaseConfig } from './firebase-config.js';
+import { getCurrentTripId } from './data/config.js';
 
 // --- INITIALIZE FIREBASE ---
 let db;
@@ -29,6 +30,13 @@ const TRIP_DATES = {
 };
 
 // --- UTILS ---
+function hideLoading() {
+    const loading = document.getElementById('loading-overlay');
+    if (loading) {
+        loading.classList.add('hidden');
+    }
+}
+
 function getSavedFxRate() {
     const saved = localStorage.getItem('fxRate');
     if (saved) {
@@ -367,8 +375,8 @@ function init() {
     getSavedFxRate();
 
     if (db) {
-        // 使用不帶排序的查詢，改用本地端排序以避免需要手動建立 Firebase 索引
-        const q = collection(db, "expenses");
+        const tripId = getCurrentTripId();
+        const q = collection(db, `${tripId}_expenses`);
         onSnapshot(q, (snapshot) => {
             expenses = snapshot.docs.map(doc => ({
                 id: doc.id,
@@ -388,6 +396,7 @@ function init() {
 
             renderDaySelector();
             renderExpenses();
+            hideLoading();
 
             // 首次讀取後，自動對應當天日期
             if (!initialLoadDone) {
@@ -404,6 +413,7 @@ function init() {
             }
         }, (err) => {
             console.error("Fetch failed", err);
+            hideLoading();
             document.getElementById('expense-container').innerHTML = `
                 <div class="glass-card p-10 rounded-3xl text-center text-red-400">
                     <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>歷次行程資訊 - 旅遊小幫手</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Quicksand:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="data/theme-manager.js"></script>
+
+    <style>
+        .trip-card {
+            border-radius: 2.5rem;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            margin-bottom: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .trip-card:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50">
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="loader-spinner"></div>
+        <div class="loading-text">雲端資料庫讀取中請稍後</div>
+    </div>
+
+    <!-- Header -->
+    <header
+        class="coastal-gradient text-white pt-5 pb-10 px-8 rounded-b-[2rem] shadow-2xl relative overflow-hidden mb-4">
+        <!-- 背景裝飾 -->
+        <div id="header-decoration" class="absolute top-[-20px] right-[-20px] opacity-10 text-[8rem] rotate-12">
+            <i class="fas fa-ship"></i>
+        </div>
+        <h1 data-no-auto-title class="text-3xl font-black mb-2 tracking-tight">歷次旅行資訊</h1>
+
+        <!-- Waves SVG -->
+        <svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+            </g>
+        </svg>
+    </header>
+
+    <!-- Trip List Content -->
+    <main class="px-6 pb-32">
+        <div id="trips-container" class="space-y-6">
+            <!-- Trips will be injected here -->
+        </div>
+    </main>
+
+    <!-- Bottom Navigation (Shared) -->
+    <nav id="bottom-nav-container"></nav>
+
+    <!-- Scripts -->
+    <script type="module">
+        import { trips, setCurrentTripId, getCurrentTripId } from './data/config.js';
+
+        function hideLoading() {
+            const loading = document.getElementById('loading-overlay');
+            if (loading) {
+                loading.classList.add('hidden');
+            }
+        }
+
+        // 渲染導覽列
+        function renderNav() {
+            const container = document.getElementById('bottom-nav-container');
+            container.innerHTML = `
+                <nav class="main-nav">
+                    <a href="history.html" class="nav-item active">
+                        <i class="fas fa-history"></i>
+                        <span>歷史旅程</span>
+                    </a>
+                    <a href="wallet.html" class="nav-item">
+                        <i class="fas fa-calculator"></i>
+                        <span>計算機</span>
+                    </a>
+                    <a href="index.html" class="nav-item-home">
+                        <div class="nav-home-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                    </a>
+                    <a href="ledger.html" class="nav-item">
+                        <i class="fas fa-receipt"></i>
+                        <span>記帳</span>
+                    </a>
+                    <a href="weather.html" class="nav-item">
+                        <i class="fas fa-cloud-sun"></i>
+                        <span>天氣</span>
+                    </a>
+                </nav>
+            `;
+        }
+
+        // 渲染行程清單
+        function renderTrips() {
+            const container = document.getElementById('trips-container');
+            container.innerHTML = trips.map(t => `
+                <div class="trip-card group overflow-hidden">
+                    <div class="h-52 relative">
+                        <img src="${t.coverImg}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 text-white">
+                            <span class="text-[10px] bg-white/20 backdrop-blur px-3 py-1 rounded-full font-bold uppercase tracking-widest mb-2 inline-block">
+                                ${t.startDate.replace(/-/g, '.')} - ${t.endDate.replace(/-/g, '.')}
+                            </span>
+                            <h3 class="text-2xl font-black">${t.name}</h3>
+                        </div>
+                    </div>
+                    <div class="p-6 flex gap-3">
+                        <button onclick="handleViewTrip('${t.id}')" 
+                            class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-800 font-black py-4 rounded-3xl transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-calendar-alt text-sky-500"></i> 行程
+                        </button>
+                        <button onclick="handleViewLedger('${t.id}')" 
+                            class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-800 font-black py-4 rounded-3xl transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-receipt text-emerald-500"></i> 花費
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.handleViewTrip = (id) => {
+            window.location.href = `history_index.html?tripId=${id}`;
+        };
+
+        window.handleViewLedger = (id) => {
+            window.location.href = `history_ledger.html?tripId=${id}`;
+        };
+
+        window.onload = () => {
+            renderNav();
+            renderTrips();
+            hideLoading();
+        };
+    </script>
+</body>

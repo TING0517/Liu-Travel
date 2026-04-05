@@ -1,239 +1,213 @@
-// --- DATA ---
-const itinerary = {
-    1: [
-        { time: "08:00", text: "飯店放行李-Toyoko Inn 釜山海雲台2", stay: "15分", type: "hotel" },
-        { time: "08:20", text: "早餐-密陽血腸豬肉湯飯 海雲台店", stay: "1小時", type: "food" },
-        { time: "09:25", text: "換錢-MONEYBOX HAEUNDAE", stay: "15分" },
-        { time: "09:40", text: "海雲台海灘", stay: "20分" },
-        { time: "10:00", text: "自然島鹽麵包 釜山店", stay: "20分", type: "food" },
-        { time: "10:30", text: "午餐、休息-CLUB D OASIS汗蒸幕", stay: "3小時", type: "food" },
-        { time: "14:00", text: "00、30、45 海雲台藍線公園海岸列車(至松亭)", highlight: true },
-        { time: "14:30", text: "松亭海水浴場", stay: "1.5小時" },
-        { time: "16:00", text: "00、12、30 海雲台藍線公園海岸列車(至青沙浦天空步道)", highlight: true },
-        { time: "16:20", text: "青沙浦天空步道", stay: "15分" },
-        { time: "16:50", text: "青沙浦漁港", stay: "40分" },
-        { time: "17:50", text: "17:30~18:00 海雲台藍線公園膠囊列車 (至尾浦)", stay: "30分", highlight: true },
-        { time: "18:40", text: "釜山 X the SKY", stay: "1小時" },
-        { time: "20:00", text: "晚餐-伍班長烤肉", stay: "1.5小時", type: "food" }
-    ],
-    2: [
-        { time: "08:45", text: "海東龍宮寺", stay: "1.5小時" },
-        { time: "10:30", text: "釜山樂天世界冒險樂園", stay: "3.5小時" },
-        { time: "10:30", text: "Skyline Luge 釜山" },
-        { time: "14:00", text: "Lotte Outlets ＆ 午餐-螞蟻家辣炒章魚 )", type: "food" },
-        { time: "18:00", text: "晚餐、休息-SPA LAND 汗蒸幕", stay: "4小時" }
-    ],
-    3: [
-        { time: "08:30", text: "行李寄放-Toyoko Inn 釜山中央店" },
-        { time: "10:00", text: "松島纜車、龍宮雲橋", stay: "2.5小時" },
-        { time: "12:30", text: "松島天空步道", stay: "20分" },
-        { time: "13:30", text: "午餐-國際炸雞 富平本店", type: "food" },
-        { time: "13:30", text: "國際市場巡禮(紅豆奶油艾草麻吉)", stay: "2小時" },
-        { time: "15:50", text: "白淺灘文化村", stay: "2小時" },
-        { time: "18:30", text: "晚餐-Lee Jae Mo Pizza", type: "food" }    
-    ],
-    4: [
-        { time: "09:30", text: "甘川洞文化村", stay: "3小時" },
-        { time: "12:40", text: "午餐-札嘎其市場", type: "food" },
-        { time: "14:00", text: "BIFF 廣場", stay: "3小時" },
-        { time: "15:30", text: "南川洞櫻花路", highlight: true },
-        { time: "15:30", text: "廣安里海水浴場", stay: "3小時" },
-        { time: "18:30", text: "晚餐-明倫進士烤肉 ", type: "food" }
-    ],
-    5: [
-        { time: "09:30", text: "釜山至鎮海", highlight: true },
-        { time: "11:00", text: "慶和站公園 (櫻花鐵道)", stay: "1.5小時" },
-        { time: "13:00", text: "余佐川櫻花徑", stay: "3.5小時" },
-        { time: "18:00", text: "晚餐-匠人鐵板雞 ＆ 西面巡禮", type: "food" }
-    ],
-    6: [
-        { time: "09:30", text: "太宗台", stay: "2小時" },
-        { time: "12:00", text: "午餐-影島海女村", type: "food" },
-        { time: "13:00", text: "東三海水泉櫻花路", stay: "1小時" },
-        { time: "14:00", text: "下午茶-P.ARK", type: "food", stay: "1.5小時" },
-        { time: "16:30", text: "拿行李-Toyoko Inn 釜山中央站" },
-        { time: "16:50", text: "搭 SRT / KTX 至東大邱", highlight: true },
-        { time: "19:00", text: "晚餐-Shake Shack", type: "food"}
-    ],
-    7: [
-        { time: "10:30", text: "大邱近代胡同 (青蘿丘、大邱第一教會、三一運動路、桂山聖堂)" },
-        { time: "12:00", text: "午餐-巨松燉排骨", type: "food" },
-        { time: "13:30", text: "藥令市韓醫藥博物館" },
-        { time: "14:00", text: "下午茶-星巴克鐘路古宅店" , stay: "1.5小時"},
-        { time: "16:00", text: "西門市場" },
-        { time: "17:30", text: "晚餐-PURADAK CHICKEN / 大邱美食", type: "food", stay: "1.5小時" },
-        { time: "19:00", text: "拿行李-大邱水晶飯店" },
-        { time: "20:20", text: "抵達大邱國際機場" }
-    ]
-};
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, deleteDoc, doc, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { firebaseConfig } from './firebase-config.js';
+import { trips, getCurrentTripId } from './data/config.js';
 
-const hotels = {
-    1: "Toyoko Inn 釜山海雲臺2", 2: "Toyoko Inn 釜山海雲臺2",
-    3: "Toyoko Inn 釜山中央店", 4: "Toyoko Inn 釜山中央店", 5: "Toyoko Inn 釜山中央店",
-    6: "大邱水晶飯店", 7: "回溫暖的家 ✈️"
-};
+// --- INITIALIZE FIREBASE ---
+let db;
+try {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+} catch (e) {
+    console.error("Firebase Initialization Failed", e);
+}
 
-const guides = [
-    {
-        title: "海東龍宮寺",
-        desc: "海東龍宮寺是韓國唯一一座座落於海邊的壯麗寺廟，始建於1376年。這裡依山傍海的景致與一般山中的佛寺截然不同，踏入寺廟前需經過108階的階梯，沿途可聽見浪花拍打礁岩的澎拜聲響。相傳在這裡誠心祈禱，至少能實現一個願望，因此終年香火鼎盛。清晨時分，更是釜山觀賞日出的絕佳地點，看著太陽從海平線升起，映照著古色古香的樓閣，景色美不勝收。",
-        tag: "Heritage",
-        icon: "fa-dharmachakra",
-        img: "./img/海東龍宮寺.jpg"
-    },
-    {
-        title: "釜山樂天世界",
-        desc: "2022年全新開幕的釜山樂天世界冒險樂園，佔地廣大且充滿異國童話氛圍。園內最受歡迎的便是以「童話王國」為主題的建築設計，讓人彷彿置身於魔法世界中。除了有刺激感十足、時速高達105公里的水上雲霄飛車 Giant Splash，還有適合親子同樂的旋轉木馬與精彩的日間巡遊表演。這裡不僅是追求快感的年輕人天堂，多樣化的主題拍照區也絕對能滿足想要留下美照的旅人，是近期釜山最熱門的打卡地標。",
-        tag: "Park",
-        icon: "fa-fort-awesome",
-        img: "./img/釜山樂天世界.jpg"
-    },
-    {
-        title: "鑽石灣遊艇",
-        desc: "搭乘鑽石灣豪華遊艇出海，是體驗釜山海洋魅力的最浪漫方式。從龍湖灣碼頭出發，航程將帶領遊客穿梭於廣安大橋之下，從海上的特等席近距離欣賞這座釜山地標的宏偉。若選擇在黃昏或夜晚時分登船，更能飽覽廣安里沿岸五光十色的城市夜景。微風徐徐吹過，手中握著香檳與三五好友交談，享受極致的奢華放鬆感，無論是情侶約會或家庭旅遊，這絕對是整趟賞櫻之旅中最難忘的高光時刻。",
-        tag: "Ocean",
-        icon: "fa-ship",
-        img: "./img/鑽石灣遊艇.jpg"
-    },
-    {
-        title: "Spa Land",
-        desc: "位於世界最大百貨公司——新世界百貨內的 Spa Land，被譽為釜山最豪華的五星級汗蒸幕。這裡利用地下 1000 公尺處抽取的碳酸溫泉與食鹽溫泉，打造了多達 22 個溫泉浴池與 13 個各具特色主題的汗蒸房。從黃金桑拿室、芬蘭桑拿室到冰房一應俱全。內部空間挑高設計、充滿質感，除了泡湯區外還有高級躺椅休憩區與足湯池，是旅程中洗去疲憊、深度放鬆身心的極致享受，即便平時不習慣泡澡的人也會一試成主顧。",
-        tag: "Relax",
-        icon: "fa-bath",
-        img: "./img/Spa Land.jpg"
-    },
-    {
-        title: "白淺灘文化村",
-        desc: "被譽為「釜山聖托里尼」的白淺灘文化村，原是韓戰時期難民的避風港，如今經過藝術家與居民的努力，轉型為充滿文藝氣息的小村落。沿著影島海岸線而築的層次感房舍，刷上純淨的藍白油漆，搭配腳下蔚藍的大海與遠處的絕影海岸步道，美得令人屏息。巷弄間隱藏著多間極具設計感的特色咖啡廳與手作工作坊，隨手一拍都是明信片般的風景。漫步在蜿蜒的海邊小徑，感受海風拂面與靜謐的氛圍，是體驗道地影島風情的最佳去處。",
-        tag: "Photo",
-        icon: "fa-camera-retro",
-        img: "./img/白淺灘文化村.jpg"
-    },
-    {
-        title: "鎮海櫻花",
-        desc: "位於鎮海區的櫻花，是韓國春天最具代表性的風景，每年吸引數百萬人前來朝聖。最具盛名的莫過於長達 1.5 公里的「餘佐川櫻花徑」，橋上兩側櫻花盛開如隧道般覆蓋溪流；以及「慶和火車站」的櫻花鐵道，當火車緩緩駛進櫻花隧道，落櫻紛飛的瞬間簡直如同電影場景。鎮海市內隨處可見櫻花樹夾道盛開，形成一片壯觀的淡粉色花海。在這裡漫步於花樹之下，空氣中瀰漫著春天的清新氣息，是每年賞櫻季節絕對不能錯過的夢幻景點。",
-        tag: "Season",
-        icon: "fa-leaf",
-        img: "./img/鎮海櫻花.jpg"
-    },
-    {
-        title: "大邱近代胡同",
-        desc: "大邱近代胡同是保留了韓國近現代史縮影的歷史之路。漫步在這些狹窄而悠長的小巷中，可以看見融合了西式與韓式風格的紅磚教堂、青蘿坡上的傳教士故居，以及著名的「三一運動階梯」。這裡不僅是多部熱門韓劇的取景地，更是感受南北韓歷史交織脈動的場域。沿途還有藥令市韓醫藥博物館等具有歷史意義的遺址，讓人彷彿穿越時空，走進上世紀的歷史長廊。在現代化的城市步調中，這裡保留了一份專屬於大邱的優雅與寧靜。",
-        tag: "History",
-        icon: "fa-landmark",
-        img: "./img/大邱近代胡同.jpg"
-    }
-];
-
-// --- CORE LOGIC ---
+// --- GLOBALS ---
 let currentDay = 1;
 let fxRate = 46;
+let itineraryItems = [];
+const tripId = getCurrentTripId();
+const currentTrip = trips.find(t => t.id === tripId) || trips[0];
 
-function changeFxRate() {
-    const newRate = prompt("請輸入當前的韓元對台幣匯率 (例如 46 或 45.5):", fxRate);
-    if (newRate !== null && !isNaN(newRate) && newRate > 0) {
-        fxRate = parseFloat(newRate);
-        localStorage.setItem('fxRate', fxRate);
-        document.getElementById('fx-rate-display').innerText = `匯率 1 : ${fxRate}`;
-        handleCalcInput();
+const getItineraryPath = () => `${tripId}_itineraries`;
+
+// --- ITINERARY CRUD LOGIC ---
+
+async function fetchItinerary() {
+    if (!db) return;
+    const q = query(collection(db, getItineraryPath()));
+
+    onSnapshot(q, (snapshot) => {
+        itineraryItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderItinerary();
+        hideLoading();
+    }, (err) => {
+        console.error("Fetch itinerary failed", err);
+        hideLoading();
+    });
+}
+
+window.openItineraryModal = function (eventId = null) {
+    const modal = document.getElementById('itinerary-modal');
+    const content = document.getElementById('itinerary-modal-content');
+    const form = document.getElementById('itinerary-form');
+    const title = document.getElementById('itinerary-modal-title');
+    const delBtn = document.getElementById('event-delete-btn');
+
+    form.reset();
+    document.getElementById('event-id').value = '';
+    
+    if (eventId) {
+        const item = itineraryItems.find(i => i.id === eventId);
+        if (item) {
+            title.innerText = "編輯行程內容";
+            document.getElementById('event-id').value = item.id;
+            document.getElementById('event-time').value = item.time;
+            document.getElementById('event-text').value = item.text;
+            document.getElementById('event-stay').value = item.stay || '';
+            document.getElementById('event-type').value = item.type || 'normal';
+            document.getElementById('event-highlight').checked = item.highlight || false;
+            delBtn.classList.remove('hidden');
+        }
+    } else {
+        title.innerText = "新增行程項目";
+        delBtn.classList.add('hidden');
+        // 預設目前選取的天數
+    }
+
+    modal.classList.remove('hidden');
+    setTimeout(() => content.classList.remove('translate-y-full'), 10);
+};
+
+window.closeItineraryModal = function () {
+    const modal = document.getElementById('itinerary-modal');
+    const content = document.getElementById('itinerary-modal-content');
+    content.classList.add('translate-y-full');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+};
+
+async function handleItinerarySubmit(e) {
+    e.preventDefault();
+    if (!db) return;
+
+    const id = document.getElementById('event-id').value;
+    const data = {
+        day: currentDay,
+        time: document.getElementById('event-time').value,
+        text: document.getElementById('event-text').value,
+        stay: document.getElementById('event-stay').value,
+        type: document.getElementById('event-type').value,
+        highlight: document.getElementById('event-highlight').checked,
+        updatedAt: Timestamp.now()
+    };
+
+    try {
+        if (id) {
+            await updateDoc(doc(db, getItineraryPath(), id), data);
+        } else {
+            data.createdAt = Timestamp.now();
+            await addDoc(collection(db, getItineraryPath()), data);
+        }
+        window.closeItineraryModal();
+    } catch (err) {
+        console.error("Save itinerary failed", err);
+        alert("儲存失敗，請檢查網路或 Firebase 設定。");
     }
 }
 
-function getAutoDay() {
-    const startDate = new Date('2026-03-29');
-    const endDate = new Date('2026-04-04');
-    const today = new Date();
+window.deleteItineraryItem = async function () {
+    const id = document.getElementById('event-id').value;
+    if (!id || !confirm("確定要刪除這項行程嗎？")) return;
 
-    // 統一時間基準 (00:00:00) 以進行日期比較
-    today.setHours(0, 0, 0, 0);
-    startDate.setHours(0, 0, 0, 0);
-    endDate.setHours(0, 0, 0, 0);
-
-    if (today >= startDate && today <= endDate) {
-        // 計算天數差 (+1 是因為從 Day 1 開始)
-        return Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
+    try {
+        await deleteDoc(doc(db, getItineraryPath(), id));
+        window.closeItineraryModal();
+    } catch (err) {
+        console.error("Delete failed", err);
     }
-    return 1; // 不在範圍內則預設為第一天
+};
+
+// --- UTILS ---
+function hideLoading() {
+    const loading = document.getElementById('loading-overlay');
+    if (loading) {
+        loading.classList.add('hidden');
+    }
 }
+
+// --- UI LOGIC ---
 
 function switchDay(day) {
     currentDay = day;
-    document.getElementById('current-day-label').innerText = day;
+    const label = document.getElementById('current-day-label');
+    if (label) label.innerText = day;
+    
     document.querySelectorAll('.day-btn').forEach((btn, idx) => {
         btn.classList.toggle('active-day', idx + 1 === day);
     });
     renderItinerary();
 }
+window.switchDay = switchDay;
 
 function renderItinerary() {
     const container = document.getElementById('itinerary-container');
     if (!container) return;
-    container.innerHTML = '';
+    
+    // 過濾出當天的行程並按時間排序
+    const dayItems = itineraryItems
+        .filter(item => item.day === currentDay)
+        .sort((a, b) => a.time.localeCompare(b.time));
 
-    itinerary[currentDay].forEach(item => {
-        const div = document.createElement('div');
-        div.className = `relative pl-12 timeline-line pb-6`;
-
-        const dotClass = item.highlight ? 'bg-amber-500 ring-4 ring-amber-100' : (item.type === 'food' ? 'bg-emerald-500' : 'bg-sky-500');
-
-        div.innerHTML = `
-            <div class="absolute left-0 top-1 w-10 h-10 flex items-center justify-center">
-                <div class="w-4 h-4 rounded-full ${dotClass} z-10"></div>
+    if (dayItems.length === 0) {
+        container.innerHTML = `
+            <div class="glass-card p-10 rounded-[2.5rem] text-center text-slate-400">
+                <i class="fas fa-map-marker-alt text-4xl mb-4 opacity-20"></i>
+                <p class="font-bold">今日尚無行程紀錄<br>可以點右上角按鈕新增喔！</p>
             </div>
-            <div class="glass-card p-5 rounded-3xl transition-all active:scale-95">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="font-bold text-slate-400 tracking-wider font-mono">${item.time}</span>
-                    ${item.stay ? `<span class="text-[12px] bg-sky-50 px-3 py-1 rounded-full text-sky-600 font-bold"> ${item.stay}</span>` : ''}
+        `;
+        return;
+    }
+
+    container.innerHTML = dayItems.map(item => {
+        const dotClass = item.highlight ? 'bg-amber-500 ring-4 ring-amber-100' : (item.type === 'food' ? 'bg-emerald-500' : 'bg-sky-500');
+        
+        return `
+            <div class="relative pl-12 timeline-line pb-6 group">
+                <div class="absolute left-0 top-1 w-10 h-10 flex items-center justify-center">
+                    <div class="w-4 h-4 rounded-full ${dotClass} z-10"></div>
                 </div>
-                <h4 class="font-bold text-slate-800 text-xl">${item.text}</h4>
-                <div class="flex gap-3 mt-4">
-                    <button onclick="openMap('${item.text}')" class="text-xs font-bold text-sky-600 bg-sky-50 px-4 py-2 rounded-xl">
-                        <i class="fas fa-map-marker-alt mr-1"></i> 地圖
-                    </button>
-                    ${item.type === 'food' ? `
-                        <button onclick="openBlog('${item.text}')" class="text-xs font-bold text-emerald-600 bg-emerald-50 px-4 py-2 rounded-xl">
-                            <i class="fas fa-utensils mr-1"></i> 食記
+                <div class="glass-card p-5 rounded-3xl transition-all active:scale-[0.98] relative">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="font-bold text-slate-400 tracking-wider font-mono">${item.time}</span>
+                        <div class="flex items-center gap-2">
+                            ${item.stay ? `<span class="text-[12px] bg-sky-50 px-3 py-1 rounded-full text-sky-600 font-bold"> ${item.stay}</span>` : ''}
+                            <button onclick="openItineraryModal('${item.id}')" class="edit-btn w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center hover:bg-sky-100 hover:text-sky-600 transition-all">
+                                <i class="fas fa-pen text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <h4 class="font-bold text-slate-800 text-xl mb-3">${item.text}</h4>
+                    <div class="flex gap-3">
+                        <button onclick="openMap('${item.text}')" class="text-xs font-bold text-sky-600 bg-sky-50 px-4 py-2 rounded-xl">
+                            <i class="fas fa-map-marker-alt mr-1"></i> 地圖
                         </button>
-                    ` : ''}
+                        ${item.type === 'food' ? `
+                            <button onclick="openBlog('${item.text}')" class="text-xs font-bold text-emerald-600 bg-emerald-50 px-4 py-2 rounded-xl">
+                                <i class="fas fa-utensils mr-1"></i> 食記
+                            </button>
+                        ` : ''}
+                    </div>
                 </div>
             </div>
         `;
-        container.appendChild(div);
-    });
-    document.getElementById('hotel-name').innerText = hotels[currentDay];
+    }).join('');
+
+    // 更新飯店資訊 (這部分如果也要動態可以再改，目前先抓該天是否有 type='hotel')
+    const hotelEl = document.getElementById('hotel-name');
+    if (hotelEl) {
+        const hotelItem = dayItems.find(i => i.type === 'hotel');
+        hotelEl.innerText = hotelItem ? hotelItem.text.replace('飯店放行李-', '').replace('今晚住宿：', '') : "尚未決定住宿";
+    }
 }
 
-function renderGuides() {
-    const container = document.getElementById('guide-container');
-    if (!container) return;
-    container.innerHTML = guides.map(g => `
-        <div class="glass-card rounded-[2.5rem] p-0 shadow-sm relative overflow-hidden group mb-10">
-            <!-- Image Area -->
-            <div class="h-64 w-full overflow-hidden relative">
-                <img src="${g.img}" alt="${g.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-2xl shadow-sm z-10 flex items-center gap-2">
-                    <i class="fas ${g.icon} text-sky-500 text-sm"></i>
-                    <span class="text-[12px] font-extrabold text-sky-500 uppercase tracking-widest">${g.tag}</span>
-                </div>
-            </div>
+window.openMap = (query) => window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
+window.openBlog = (query) => window.open(`https://www.google.com/search?q=${encodeURIComponent(query + ' 食記')}`, '_blank');
 
-            <!-- Content Area -->
-            <div class="p-8">
-                <h3 class="text-3xl font-black text-slate-800 mb-4">${g.title}</h3>
-                <p class="text-base text-slate-500 leading-relaxed text-justify mb-4">
-                    ${g.desc}
-                </p>
-            </div>
-        </div>
-    `).join('') + `<div class="h-10"></div>`; // 額外底部空間
-}
-
-function openMap(query) { window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank'); }
-function openBlog(query) { window.open(`https://www.google.com/search?q=${encodeURIComponent(query + ' 食記')}`, '_blank'); }
 
 // --- CALCULATOR LOGIC ---
-function appendCalc(val) {
+window.appendCalc = function(val) {
     const display = document.getElementById('calc-display');
+    if (!display) return;
     if (display.innerText === '0' && val !== '.') {
         display.innerText = val;
     } else {
@@ -242,8 +216,9 @@ function appendCalc(val) {
     handleCalcInput();
 }
 
-function clearCalc() {
-    document.getElementById('calc-display').innerText = '0';
+window.clearCalc = function() {
+    const display = document.getElementById('calc-display');
+    if (display) display.innerText = '0';
     updateTwdResult(0);
 }
 
@@ -251,24 +226,21 @@ function handleCalcInput() {
     const input = document.getElementById('calc-display').innerText;
     const equalBtn = document.getElementById('calc-equal-btn');
 
-    // 檢查是否有運算符號
     if (/[+\-*/]/.test(input)) {
         if (equalBtn) equalBtn.classList.remove('hidden');
-        // 加法進行中時，台幣金額歸零避免誤會
         updateTwdResult(0);
     } else {
         if (equalBtn) equalBtn.classList.add('hidden');
         const val = parseFloat(input);
         if (!isNaN(val)) updateTwdResult(val);
-        else if (input === '' || input === '0') updateTwdResult(0);
+        else updateTwdResult(0);
     }
 }
 
-function performManualCalc() {
+window.performManualCalc = function() {
     const display = document.getElementById('calc-display');
     const input = display.innerText;
     try {
-        // 使用更安全的計算方式或簡單評估
         const result = Function('"use strict";return (' + input + ')')();
         display.innerText = result;
         const equalBtn = document.getElementById('calc-equal-btn');
@@ -280,17 +252,21 @@ function performManualCalc() {
 }
 
 function updateTwdResult(krw) {
-    const twd = Math.round(krw / fxRate);
-    document.getElementById('res-twd').innerText = twd.toLocaleString();
+    const el = document.getElementById('res-twd');
+    if (el) el.innerText = Math.round(krw / fxRate).toLocaleString();
 }
 
-function resetCalculator() {
-    document.getElementById('calc-display').innerText = '0';
-    document.getElementById('res-twd').innerText = '0';
-    document.getElementById('calc-equal-btn').classList.add('hidden');
+window.changeFxRate = function() {
+    const newRate = prompt("請輸入當前的韓元對台幣匯率 (例如 46 或 45.5):", fxRate);
+    if (newRate !== null && !isNaN(newRate) && newRate > 0) {
+        fxRate = parseFloat(newRate);
+        localStorage.setItem('fxRate', fxRate);
+        const display = document.getElementById('fx-rate-display');
+        if (display) display.innerText = `匯率 1 : ${fxRate}`;
+    }
 }
 
-// --- WEATHER LOGIC (Open-Meteo API - No Key Required & CORS Friendly) ---
+// --- WEATHER LOGIC ---
 async function fetchWeather() {
     const cities = [
         { name: 'Busan', displayName: '釜山', id: 'weather-busan', lat: 35.1796, lng: 129.0756 },
@@ -299,24 +275,12 @@ async function fetchWeather() {
 
     for (const city of cities) {
         try {
-            // Open-Meteo 請求 URL，包含即時天氣、每日概況 (用於今天降雨機率) 與 72 小時逐時預報
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current_weather=true&daily=precipitation_probability_max&hourly=temperature_2m,precipitation_probability,weathercode&timezone=auto&forecast_days=3`;
-
             const res = await fetch(url);
-            if (!res.ok) throw new Error(`API error: ${res.status}`);
             const data = await res.json();
-
             renderWeatherUI(city.id, data);
-
         } catch (e) {
             console.error(`Weather for ${city.name} failed`, e);
-            document.getElementById(city.id).innerHTML = `
-                <div class="text-white p-4 text-center">
-                    <i class="fas fa-exclamation-triangle mb-2 opacity-50"></i>
-                    <p class="text-xs opacity-70">氣象數據暫時無法取得</p>
-                    <button onclick="fetchWeather()" class="mt-4 text-[10px] bg-white/20 px-3 py-1 rounded-full">重試</button>
-                </div>
-            `;
         }
     }
 }
@@ -329,10 +293,7 @@ function renderWeatherUI(containerId, data) {
     const daily = data.daily;
     const hourly = data.hourly;
     const temp = Math.round(current.temperature);
-    const weatherCode = current.weathercode;
-    const weatherDesc = getWmoWeatherDesc(weatherCode);
-
-    // 取得今天的最高降雨機率 (daily.precipitation_probability_max[0])
+    const weatherDesc = getWmoWeatherDesc(current.weathercode);
     const rainChance = daily.precipitation_probability_max[0] || 0;
     const obsTime = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
 
@@ -347,66 +308,40 @@ function renderWeatherUI(containerId, data) {
             </div>
             <div class="text-[12px] text-white/60 mb-2 font-medium">觀測時間：今天 ${obsTime}</div>
         </div>
-
         <div class="pt-6 border-t border-white/20">
             <div class="flex items-center justify-between mb-4">
-                <span class="text-xs font-black text-white/50 uppercase tracking-[0.2em]">未來 3 日逐時預報</span>
+                <span class="text-xs font-black text-white/50 uppercase tracking-[0.2em]">未來預報</span>
                 <span class="text-[10px] text-white/40"><i class="fas fa-arrows-left-right mr-1"></i> 左右滑動</span>
             </div>
-            
             <div class="flex overflow-x-auto gap-4 pb-4 hide-scrollbar -mx-2 px-2 w-full">
     `;
 
-    // 渲染未來逐時預報 (取前 72 個小時)
     const now = new Date();
-    const currentHourStr = now.getHours();
-
     for (let i = 0; i < hourly.time.length; i++) {
         const timeObj = new Date(hourly.time[i]);
-
-        // 跳過過去的小時，只顯示從現在開始的預報
         if (timeObj < new Date(now.getTime() - 60 * 60 * 1000)) continue;
 
         const hour = timeObj.getHours();
-        const dateStr = `${timeObj.getMonth() + 1}/${timeObj.getDate()}`;
-        const code = hourly.weathercode[i];
-        const hTemp = Math.round(hourly.temperature_2m[i]);
-        const hProb = hourly.precipitation_probability[i];
-
-        // 判斷是否為跨日的第一個小時或是今天
-        const isNewDay = hour === 0;
-        const displayTime = hour === 0 ? `<span class="text-sky-300">${dateStr}</span>` : `${hour}:00`;
+        const displayTime = hour === 0 ? `<span class="text-sky-300">${timeObj.getMonth() + 1}/${timeObj.getDate()}</span>` : `${hour}:00`;
 
         html += `
             <div class="flex-shrink-0 flex flex-col items-center bg-white/10 backdrop-blur-md rounded-2xl py-4 px-3 min-w-[70px] border border-white/5">
                 <span class="text-[11px] font-bold text-white/70 mb-2">${displayTime}</span>
-                <i class="fas ${getWeatherIcon(code)} text-lg text-white mb-2"></i>
-                <span class="text-base font-black text-white mb-1">${hTemp}°</span>
+                <i class="fas ${getWeatherIcon(hourly.weathercode[i])} text-lg text-white mb-2"></i>
+                <span class="text-base font-black text-white mb-1">${Math.round(hourly.temperature_2m[i])}°</span>
                 <div class="flex items-center gap-0.5 text-[10px] text-sky-200 font-bold">
-                    <i class="fas fa-droplet scale-75"></i> ${hProb}%
+                    <i class="fas fa-droplet scale-75"></i> ${hourly.precipitation_probability[i]}%
                 </div>
             </div>
         `;
     }
 
-    html += `
-            </div>
-        </div>
-    `;
-    container.innerHTML = html;
+    html += `</div></div>`;
     container.innerHTML = html;
 }
 
 function getWmoWeatherDesc(code) {
-    const mapping = {
-        0: '晴朗',
-        1: '晴時多雲', 2: '多雲', 3: '陰天',
-        45: '霧', 48: '霧',
-        51: '毛毛雨', 53: '毛毛雨', 55: '毛毛雨',
-        61: '小雨', 63: '雨', 65: '大雨',
-        80: '陣雨', 81: '陣雨', 82: '強陣雨',
-        95: '雷雨', 96: '雷雨伴有冰雹', 99: '雷雨伴有大冰雹'
-    };
+    const mapping = { 0: '晴朗', 1: '晴時多雲', 2: '多雲', 3: '陰天', 45: '霧', 48: '霧', 51: '毛毛雨', 53: '毛毛雨', 55: '毛毛雨', 61: '小雨', 63: '雨', 65: '大雨', 80: '陣雨', 81: '陣雨', 82: '強陣雨', 95: '雷雨' };
     return mapping[code] || '未知';
 }
 
@@ -415,14 +350,12 @@ function getWeatherIcon(code) {
     if ([2, 3].includes(code)) return 'fa-cloud-sun';
     if ([45, 48].includes(code)) return 'fa-smog';
     if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return 'fa-cloud-showers-heavy';
-    if ([71, 73, 75, 77, 85, 86].includes(code)) return 'fa-snowflake';
-    if ([95, 96, 99].includes(code)) return 'fa-bolt';
     return 'fa-cloud';
 }
 
 // --- INIT ---
-window.onload = () => {
-    // 優先讀取紀錄中的匯率
+window.addEventListener('load', () => {
+    // 匯率
     const savedRate = localStorage.getItem('fxRate');
     if (savedRate) {
         fxRate = parseFloat(savedRate);
@@ -430,18 +363,22 @@ window.onload = () => {
         if (fxDisplay) fxDisplay.innerText = `匯率 1 : ${fxRate}`;
     }
 
-    // 根據頁面容器執行對應初始化
+    // 行程
     if (document.getElementById('itinerary-container')) {
-        const autoDay = getAutoDay();
-        renderItinerary();
-        switchDay(autoDay);
+        fetchItinerary();
+        document.getElementById('btn-add-event')?.addEventListener('click', () => window.openItineraryModal());
+        document.getElementById('itinerary-form')?.addEventListener('submit', handleItinerarySubmit);
+        
+        // 自動天數 (可以保留原本 getAutoDay 邏輯)
+        const startDate = new Date(currentTrip.startDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        startDate.setHours(0, 0, 0, 0);
+        let day = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) + 1;
+        if (day < 1 || day > 7) day = 1;
+        switchDay(day);
     }
 
-    if (document.getElementById('guide-container')) {
-        renderGuides();
-    }
-
-    if (document.getElementById('weather-busan')) {
-        fetchWeather();
-    }
-};
+    // 天氣
+    if (document.getElementById('weather-busan')) fetchWeather();
+});

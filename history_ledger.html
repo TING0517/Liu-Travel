@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>歷次花費紀錄 - 旅遊小幫手</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Quicksand:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="data/theme-manager.js"></script>
+
+    <style>
+        .history-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .active-day {
+            background: #0077B6 !important;
+            color: white !important;
+            border-color: #0077B6 !important;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 119, 182, 0.2) !important;
+        }
+
+        .active-day span {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+    </style>
+</head>
+
+<body class="pb-32 bg-slate-50">
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="loader-spinner"></div>
+        <div class="loading-text">雲端資料庫讀取中</div>
+    </div>
+
+    <!-- Header / Stats Section (Cloned from ledger.html) -->
+    <header class="coastal-gradient pt-8 pb-12 px-6 rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
+        <div class="relative z-10 flex flex-col gap-6">
+            <div class="px-1 text-white">
+                <span class="history-badge">歷史花費模式</span>
+                <h1 id="trip-name" class="text-3xl font-black mb-1 tracking-tight drop-shadow-md">載入中...</h1>
+                <div class="mt-4">
+                    <span id="fx-display"
+                        class="bg-white/10 backdrop-blur border border-white/20 px-4 py-1.5 rounded-full text-xs font-bold inline-block">
+                        匯率 1 : --
+                    </span>
+                </div>
+            </div>
+
+            <!-- Total Card (Only TWD, Left-Right Layout) -->
+            <div class="glass-card p-5 rounded-3xl border-white/20 shadow-2xl">
+                <div class="flex justify-between items-center divide-x divide-slate-100/50">
+                    <!-- Column 1: Total -->
+                    <div class="flex-1 px-1">
+                        <span
+                            class="text-slate-400 text-[11px] font-black uppercase tracking-widest block mb-1">該次總支出</span>
+                        <div class="flex items-baseline gap-1.5 text-sky-800">
+                            <span id="total-twd" class="text-2xl font-black tracking-tight">0</span>
+                            <span class="text-[10px] font-black uppercase opacity-40">TWD</span>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: On Behalf -->
+                    <div class="flex-1 pl-6">
+                        <span
+                            class="text-indigo-400 text-[11px] font-black uppercase tracking-widest block mb-1">代付總計</span>
+                        <div class="flex items-baseline gap-1.5 text-indigo-600">
+                            <span id="behalf-twd" class="text-2xl font-black tracking-tight">0</span>
+                            <span class="text-[10px] font-black uppercase opacity-40">TWD</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Waves SVG -->
+        <svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28" preserveAspectRatio="none">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+                <use href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use href="#gentle-wave" x="48" y="7" fill="#f8fafc" />
+            </g>
+        </svg>
+    </header>
+
+    <!-- Main Content -->
+    <main class="px-5 mt-4 relative z-20">
+        <!-- Day Selector -->
+        <div id="day-selector" class="flex gap-4 overflow-x-auto px-1 pt-8 pb-6 hide-scrollbar snap-x mb-2 mt-2">
+            <!-- Buttons will be injected by history_ledger.js -->
+        </div>
+
+        <div id="expense-container" class="space-y-4">
+            <!-- Content will be injected by history_ledger.js -->
+            <div class="text-center py-20 text-slate-400">
+                <i class="fas fa-circle-notch fa-spin text-3xl mb-4"></i>
+                <p class="text-sm font-bold">載入歷史資料中...</p>
+            </div>
+        </div>
+        <div class="h-20"></div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="main-nav">
+        <a href="history.html" class="nav-item">
+            <i class="fas fa-list-ul"></i>
+            <span>回選單</span>
+        </a>
+        <a href="index.html" class="nav-item-home">
+            <div class="nav-home-icon">
+                <i class="fas fa-home"></i>
+            </div>
+        </a>
+        <a id="nav-link-itinerary" href="#" class="nav-item active">
+            <i class="fas fa-calendar-alt"></i>
+            <span>行程</span>
+        </a>
+    </nav>
+
+    <script type="module" src="history_ledger.js"></script>
+</body>
+
+</html>

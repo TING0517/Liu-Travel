@@ -49,155 +49,126 @@
 
 </head>
 
-<body class="pb-32">
+<body class="bg-slate-50">
 
-    <!-- Header & Flight Info -->
+    <!-- Loading Overlay (暫時註解)
+    <div id="loading-overlay">
+        <div class="loader-spinner"></div>
+        <div class="loading-text">雲端資料庫讀取中</div>
+    </div>
+    -->
+
+    <!-- Header & Flight Info (暫時註解)
     <header id="main-header"
         class="coastal-gradient text-white pt-6 pb-12 px-6 rounded-b-[2.5rem] shadow-2xl relative overflow-hidden">
-        <div class="absolute top-[-20px] right-[-20px] opacity-10 text-[8rem] rotate-12">
-            <i class="fas fa-ship"></i>
-        </div>
-
-        <h1 class="text-3xl font-bold mb-1 tracking-tight drop-shadow-md">釜山海岸賞櫻之旅 🌊</h1>
-        <p class="text-sky-100 text-sm mb-4 flex items-center gap-2 font-medium">
-            <i class="fas fa-calendar-day"></i> 2026.03.29 - 04.04 (7天6夜)
-        </p>
-
-        <div class="grid grid-cols-1 gap-2 relative z-10">
-            <div
-                class="bg-white/10 backdrop-blur-lg border border-white/20 px-4 py-2 rounded-2xl flex items-center gap-4">
-                <div class="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center">
-                    <i class="fas fa-plane-departure"></i>
-                </div>
-                <div class="flex-1">
-                    <span class="block opacity-60 text-[13px] font-bold uppercase tracking-wider">去程 3/29 · 濟州航空
-                        7C6164</span>
-                    <span class="font-bold">02:50 TPE → 06:10 PUS</span>
-                </div>
-            </div>
-            <div
-                class="bg-white/10 backdrop-blur-lg border border-white/20 px-4 py-2 rounded-2xl flex items-center gap-4">
-                <div class="bg-white/20 w-9 h-9 rounded-xl flex items-center justify-center">
-                    <i class="fas fa-plane-arrival"></i>
-                </div>
-                <div class="flex-1">
-                    <span class="block opacity-60 text-[13px] font-bold uppercase tracking-wider">回程 4/4 · 德威航空
-                        TW663</span>
-                    <span class="font-bold">22:50 TAE → 00:25 TPE</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Waves SVG -->
-        <svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
-            <defs>
-                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-            </defs>
-            <g class="parallax">
-                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
-                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
-                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
-                <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
-            </g>
-        </svg>
+        ... (內容略) ...
     </header>
+    -->
 
-    <!-- Main Content Area -->
+    <!-- 無行程佔位顯示 -->
+    <main class="flex flex-col items-center justify-center min-h-[100vh] px-8 text-center coastal-gradient text-white">
+        <div
+            class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-6 border border-white/30">
+            <i class="fas fa-map-marked-alt text-4xl"></i>
+        </div>
+        <h2 class="text-3xl font-black mb-2 tracking-tight">目前沒有進行中的旅程</h2>
+        <p class="text-sky-100 font-medium mb-10 leading-relaxed max-w-[280px]">
+            現在是放鬆心情的好時機。<br>想念之前的回憶嗎？
+        </p>
+        <a href="history.html"
+            class="bg-white text-sky-700 px-10 py-4 rounded-2xl font-black shadow-xl active:scale-95 transition-all flex items-center gap-2">
+            <i class="fas fa-history"></i> 查看歷史旅程
+        </a>
+    </main>
+
+    <!-- Main Content Area (暫時註解)
     <main id="main-content" class="px-4 mt-8">
-        <!-- PLAN Section (Default) -->
-        <section id="page-plan" class="tab-page">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold text-slate-800">精選行程</h2>
-                <div class="text-sm bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full font-bold">Day <span
-                        id="current-day-label">1</span></div>
-            </div>
-
-            <!-- Day Selector -->
-            <div class="flex gap-4 overflow-x-auto px-6 pt-1 pb-6 hide-scrollbar snap-x">
-                <button onclick="switchDay(1)"
-                    class="day-btn snap-center flex-shrink-0 px-6 py-4 rounded-3xl bg-white shadow-sm border border-slate-100 min-w-[100px] font-bold text-center active-day">
-                    <span class="block text-[14px] opacity-50 uppercase mb-1">D1</span>
-                    3/29
-                </button>
-                <button onclick="switchDay(2)"
-                    class="day-btn snap-center flex-shrink-0 px-6 py-4 rounded-3xl bg-white shadow-sm border border-slate-100 min-w-[100px] font-bold text-center">
-                    <span class="block text-[14px] opacity-50 uppercase mb-1">D2</span>
-                    3/30
-                </button>
-                <button onclick="switchDay(3)"
-                    class="day-btn snap-center flex-shrink-0 px-6 py-4 rounded-3xl bg-white shadow-sm border border-slate-100 min-w-[100px] font-bold text-center">
-                    <span class="block text-[14px] opacity-50 uppercase mb-1">D3</span>
-                    3/31
-                </button>
-                <button onclick="switchDay(4)"
-                    class="day-btn snap-center flex-shrink-0 px-6 py-4 rounded-3xl bg-white shadow-sm border border-slate-100 min-w-[100px] font-bold text-center">
-                    <span class="block text-[14px] opacity-50 uppercase mb-1">D4</span>
-                    4/01
-                </button>
-                <button onclick="switchDay(5)"
-                    class="day-btn snap-center flex-shrink-0 px-6 py-4 rounded-3xl bg-white shadow-sm border border-slate-100 min-w-[100px] font-bold text-center">
-                    <span class="block text-[14px] opacity-50 uppercase mb-1">D5</span>
-                    4/02
-                </button>
-                <button onclick="switchDay(6)"
-                    class="day-btn snap-center flex-shrink-0 px-6 py-4 rounded-3xl bg-white shadow-sm border border-slate-100 min-w-[100px] font-bold text-center">
-                    <span class="block text-[14px] opacity-50 uppercase mb-1">D6</span>
-                    4/03
-                </button>
-                <button onclick="switchDay(7)"
-                    class="day-btn snap-center flex-shrink-0 px-6 py-4 rounded-3xl bg-white shadow-sm border border-slate-100 min-w-[100px] font-bold text-center">
-                    <span class="block text-[14px] opacity-50 uppercase mb-1">D7</span>
-                    4/04
-                </button>
-            </div>
-
-            <!-- Itinerary List -->
-            <div id="itinerary-container" class="space-y-8 relative ml-2">
-                <!-- Content will be injected by JS -->
-            </div>
-
-            <!-- Accommodation Card -->
-            <div id="accommodation-card" class="mt-12 p-6 bg-orange-50 border border-orange-100 rounded-[2rem]">
-                <div class="flex items-center gap-3 mb-3 text-orange-700">
-                    <i class="fas fa-hotel text-xl"></i>
-                    <h3 class="font-bold text-lg">今晚住宿</h3>
-                </div>
-                <p id="hotel-name" class="text-slate-800 font-bold text-xl">東橫inn釜山海雲台2</p>
-            </div>
-        </section>
-
-        </section>
+        ... (內容略) ...
     </main>
-    </main>
+    -->
 
     <!-- Bottom Navigation -->
-    <nav
-        class="fixed bottom-3 left-8 right-8 h-20 bg-white/90 backdrop-blur-xl border border-white/40 rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,119,182,0.15)] z-50 flex items-center justify-around px-4">
-        <a href="index.html" class="nav-btn nav-active flex flex-col items-center gap-1 transition-all">
-            <i class="fas fa-calendar-alt text-2xl"></i>
-            <span class="text-[11px] font-bold">行程</span>
+    <nav class="main-nav">
+        <a href="history.html" class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>歷史旅程</span>
         </a>
-        <a href="guide.html" class="nav-btn text-slate-400 flex flex-col items-center gap-1 transition-all">
-            <i class="fas fa-map-marked-alt text-2xl"></i>
-            <span class="text-[11px] font-bold">導覽</span>
+        <a href="wallet.html" class="nav-item">
+            <i class="fas fa-calculator"></i>
+            <span>計算機</span>
         </a>
-        <a href="wallet.html" class="nav-btn text-slate-400 flex flex-col items-center gap-1 transition-all">
-            <i class="fas fa-calculator text-2xl"></i>
-            <span class="text-[11px] font-bold">計算機</span>
+        <a href="index.html" class="nav-item-home active">
+            <div class="nav-home-icon">
+                <i class="fas fa-home"></i>
+            </div>
         </a>
-        <a href="ledger.html" class="nav-btn text-slate-400 flex flex-col items-center gap-1 transition-all">
-            <i class="fas fa-receipt text-2xl"></i>
-            <span class="text-[11px] font-bold">記帳</span>
+        <a href="ledger.html" class="nav-item">
+            <i class="fas fa-receipt"></i>
+            <span>記帳</span>
         </a>
-        <a href="weather.html" class="nav-btn text-slate-400 flex flex-col items-center gap-1 transition-all">
-            <i class="fas fa-cloud-sun text-2xl"></i>
-            <span class="text-[11px] font-bold">天氣</span>
+        <a href="weather.html" class="nav-item">
+            <i class="fas fa-cloud-sun"></i>
+            <span>天氣</span>
         </a>
     </nav>
 
+    <!-- Itinerary Edit Modal -->
+    <div id="itinerary-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="modal-backdrop absolute inset-0" onclick="closeItineraryModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[3rem] shadow-2xl p-8 transform transition-transform duration-300 translate-y-full"
+            id="itinerary-modal-content">
+            <div class="flex justify-between items-center mb-8">
+                <h3 id="itinerary-modal-title" class="text-2xl font-black text-slate-800">編輯行程</h3>
+                <button onclick="closeItineraryModal()" class="text-slate-300 hover:text-slate-500">
+                    <i class="fas fa-times-circle text-2xl"></i>
+                </button>
+            </div>
+            <form id="itinerary-form" class="space-y-5">
+                <input type="hidden" id="event-id">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">時間</label>
+                        <input type="time" id="event-time" class="form-input" required>
+                    </div>
+                    <div class="space-y-2">
+                        <label
+                            class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">停留時間</label>
+                        <input type="text" id="event-stay" class="form-input" placeholder="例如：1.5小時">
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">行程內容</label>
+                    <input type="text" id="event-text" class="form-input" placeholder="去哪裡或做什麼..." required>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">類型</label>
+                        <select id="event-type" class="form-input">
+                            <option value="normal">一般行程</option>
+                            <option value="food">用餐</option>
+                            <option value="hotel">住宿</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-3 pt-6">
+                        <input type="checkbox" id="event-highlight" class="w-5 h-5 accent-amber-500 rounded">
+                        <label for="event-highlight"
+                            class="text-sm font-black text-slate-600 cursor-pointer">設為重點行程</label>
+                    </div>
+                </div>
+                <div class="pt-6 flex flex-col gap-3">
+                    <button type="submit"
+                        class="w-full bg-slate-800 text-white py-4 rounded-2xl font-black shadow-xl active:scale-95 transition-all">儲存行程</button>
+                    <button type="button" id="event-delete-btn" onclick="deleteItineraryItem()"
+                        class="w-full bg-red-50 text-red-500 py-4 rounded-2xl font-bold active:scale-95 transition-all hidden">刪除此行程</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Scripts -->
-    <script src="script.js"></script>
+    <!-- Scripts (暫時註解)
+    <script type="module" src="script.js"></script>
+    -->
 </body>
 
 </html>
