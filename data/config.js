@@ -17,12 +17,20 @@ export const trips = [
         ]
     },
     {
-        id: 'legacy_sample',
-        name: '2023 京都賞楓 (範例)',
-        startDate: '2023-11-20',
-        endDate: '2023-11-25',
-        coverImg: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=600&auto=format&fit=crop',
-        pdfUrl: 'https://github.com/TING0517/2026_BUSAN/blob/main/example.pdf'
+        id: '2025_kyoto',
+        name: '2025京都賞楓之旅',
+        startDate: '2025-12-04',
+        endDate: '2025-12-09',
+        coverImg: './img/京都.jpg',
+        pdfUrl: './pdf/2025京都、大阪旅遊手冊.pdf'
+    }
+    {
+        id: '2025_kyoto',
+        name: '2025首爾賞櫻之旅',
+        startDate: '2025-04-04',
+        endDate: '2025-04-09',
+        coverImg: './img/首爾櫻花.jpg',
+        pdfUrl: './pdf/2025首爾旅遊手冊.pdf'
     }
 ];
 

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'travel-v2.8'; // 每次更新程式碼後，請修改此版本號
+const CACHE_NAME = 'travel-v2.13'; // 每次更新程式碼後，請修改此版本號
 
 const ASSETS = [
   './',
@@ -10,6 +10,7 @@ const ASSETS = [
   'history.html',
   'history_index.html',
   'history_ledger.html',
+  'history_pdf.html',
   'style.css',
   'index.js',
   'wallet.js',

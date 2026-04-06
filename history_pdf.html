@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PDF 行程 - Liu Family 旅行</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Quicksand:wght@500;700&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="force-install.js"></script>
+    <!-- FontAwesome (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* 針對 iOS iframe 滾動做的專屬設定 */
+        .pdf-container {
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 no-bounce h-[100dvh] w-screen flex flex-col overflow-hidden">
+
+    <!-- PDF Header -->
+    <header
+        class="coastal-gradient text-white pt-6 pb-8 px-8 rounded-b-[2rem] shadow-2xl relative overflow-hidden z-20 flex-shrink-0">
+        <!-- 背景裝飾 -->
+        <div id="header-decoration"
+            class="absolute top-[-20px] right-[-20px] opacity-10 text-[8rem] rotate-12 pointer-events-none">
+            <i class="fas fa-file-pdf"></i>
+        </div>
+
+        <div class="flex justify-between items-center relative z-10">
+            <h1 id="pdf-title" class="text-3xl font-black mb-2 tracking-tight truncate max-w-[90%] drop-shadow-md">PDF
+                行程手冊</h1>
+        </div>
+
+        <!-- Waves SVG -->
+        <svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="#f1f5f9" />
+            </g>
+        </svg>
+    </header>
+
+    <main class="flex-1 w-full bg-slate-100 pdf-container relative">
+        <iframe id="pdf-frame" class="absolute inset-0 w-full h-[120%] border-0" title="PDF Viewer"></iframe>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="main-nav">
+        <a href="history.html" class="nav-item">
+            <i class="fas fa-list-ul"></i>
+            <span>回選單</span>
+        </a>
+        <a href="index.html" class="nav-item-home">
+            <div class="nav-home-icon">
+                <i class="fas fa-home"></i>
+            </div>
+        </a>
+        <a id="nav-link-itinerary" href="#" class="nav-item active">
+            <i class="fas fa-calendar-alt"></i>
+            <span>行程</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        import { trips } from './data/config.js';
+
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            const pdfUrl = params.get('pdfUrl');
+            const tripId = params.get('tripId');
+
+            if (tripId) {
+                const t = trips.find(x => x.id === tripId);
+                if (t) {
+                    document.getElementById('pdf-title').innerText = t.name;
+                    document.title = `${t.name} - 行程手冊`;
+                }
+            }
+
+            if (pdfUrl) {
+                // 使用 #toolbar=0 來隱藏瀏覽器內建的深灰色 PDF 工具列
+                // 加上 view=FitH 讓頁面依照寬度自適應填滿
+                document.getElementById('pdf-frame').src = pdfUrl + '#toolbar=0&navpanes=0&scrollbar=0&view=FitH';
+            } else {
+                alert('此行程尚未提供 PDF 網址');
+                window.location.href = 'history.html';
+            }
+        };
+    </script>
+</body>
+
+</html>
