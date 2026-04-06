@@ -55,40 +55,55 @@
 
     <!-- Main Content Area -->
     <main id="main-content" class="px-4 mt-4">
-        <!-- CALCULATOR Section (舊名錢包) -->
+        <!-- CALCULATOR Section -->
         <section id="page-wallet" class="tab-page">
             <div class="bg-white rounded-[2rem] p-4 shadow-2xl border border-slate-100 overflow-hidden">
-                <!-- Top Info & Reset -->
-                <div class="flex justify-between items-center mb-4">
+                <!-- Currency Selector -->
+                <div class="flex bg-slate-100 rounded-2xl p-1 mb-4">
+                    <button onclick="setCurrency('JPY')" id="tab-JPY"
+                        class="flex-1 py-1 rounded-xl text-sm font-bold text-slate-400 transition-all">日幣</button>
+                    <button onclick="setCurrency('KRW')" id="tab-KRW"
+                        class="flex-1 py-1 rounded-xl text-sm font-bold text-slate-400 transition-all">韓元</button>
+                    <button onclick="setCurrency('THB')" id="tab-THB"
+                        class="flex-1 py-1 rounded-xl text-sm font-bold text-slate-400 transition-all">泰銖</button>
+                    <button onclick="setCurrency('VND')" id="tab-VND"
+                        class="flex-1 py-1 rounded-xl text-sm font-bold text-slate-400 transition-all">越盾</button>
+                    <button onclick="setCurrency('USD')" id="tab-USD"
+                        class="flex-1 py-1 rounded-xl text-sm font-bold text-slate-400 transition-all">美金</button>
+                </div>
+
+                <!-- Top Info -->
+                <div class="flex justify-start items-center mb-4">
                     <button onclick="changeFxRate()" id="fx-rate-display"
                         class="px-4 py-1.5 bg-sky-50 text-sky-600 rounded-full text-s font-bold tracking-wider active:scale-95 transition-transform">
-                        匯率 1 : 46
-                    </button>
-                    <button onclick="resetCalculator()" class="text-slate-300 hover:text-red-500 transition-colors p-2">
-                        <i class="fas fa-redo text-lg"></i>
+                        匯率 JPY : 0.21
                     </button>
                 </div>
 
                 <!-- Display Area -->
-                <div class="space-y-1.5 mb-2">
+                <div class="space-y-1.5 mb-2 relative">
                     <div class="relative">
-                        <label
-                            class="block text-[14px] font-black text-slate-300 uppercase tracking-widest mb-1 pl-2">KRW
-                            (計算過程)</label>
+                        <label id="calc-currency-label"
+                            class="block text-[14px] font-black text-slate-300 uppercase tracking-widest mb-1 pl-2">JPY</label>
                         <div id="calc-display"
-                            class="w-full bg-slate-50 border-none px-6 py-2 rounded-xl text-base font-black text-right shadow-inner min-h-[48px] flex items-center justify-end break-all overflow-y-auto">
+                            class="w-full bg-slate-50 border-none px-6 py-2 rounded-xl text-base font-black text-right shadow-inner min-h-[48px] flex items-center justify-end break-all overflow-y-auto pr-16">
                             0</div>
                     </div>
+
+                    <button onclick="toggleSwap()"
+                        class="absolute right-4 top-[50%] -translate-y-1/2 bg-white text-sky-500 shadow-md w-10 h-10 rounded-full flex justify-center items-center active:scale-95 z-10 border border-sky-100 hover:bg-sky-50 transition-colors outline-none cursor-pointer">
+                        <i class="fas fa-exchange-alt rotate-90"></i>
+                    </button>
 
                     <div class="bg-sky-600 p-3 rounded-2xl shadow-lg relative overflow-hidden">
                         <div class="absolute top-0 right-0 p-4 opacity-10">
                             <i class="fas fa-coins text-4xl text-white"></i>
                         </div>
-                        <label
+                        <label id="res-currency-label"
                             class="block text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">TWD</label>
-                        <div class="flex items-baseline justify-end gap-2">
+                        <div class="flex items-baseline justify-end gap-2 pr-12">
                             <span id="res-twd" class="text-3xl font-black text-white tracking-tighter">0</span>
-                            <span class="text-white/60 text-xs font-bold">元</span>
+                            <span id="res-unit" class="text-white/60 text-xs font-bold">元</span>
                         </div>
                     </div>
                 </div>
