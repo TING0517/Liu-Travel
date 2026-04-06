@@ -30,16 +30,19 @@
 
     <!-- PDF Header -->
     <header
-        class="coastal-gradient text-white pt-6 pb-8 px-8 rounded-b-[2rem] shadow-2xl relative overflow-hidden z-20 flex-shrink-0">
+        class="coastal-gradient text-white pt-6 pb-6 px-6 rounded-b-[2.5rem] shadow-2xl relative overflow-hidden z-20 flex-shrink-0">
         <!-- 背景裝飾 -->
         <div id="header-decoration"
             class="absolute top-[-20px] right-[-20px] opacity-10 text-[8rem] rotate-12 pointer-events-none">
             <i class="fas fa-file-pdf"></i>
         </div>
 
-        <div class="flex justify-between items-center relative z-10">
-            <h1 id="pdf-title" class="text-3xl font-black mb-2 tracking-tight truncate max-w-[90%] drop-shadow-md">PDF
-                行程手冊</h1>
+        <div class="relative z-10 mb-4">
+            <h1 id="pdf-title" class="text-3xl font-black mb-1 tracking-tight truncate w-full drop-shadow-md">PDF 行程手冊
+            </h1>
+            <p id="pdf-date" class="text-white/70 text-xs font-medium flex items-center gap-2">
+                <i class="fas fa-calendar-day"></i> 載入中...
+            </p>
         </div>
 
         <!-- Waves SVG -->
@@ -58,7 +61,7 @@
     </header>
 
     <main class="flex-1 w-full bg-slate-100 pdf-container relative">
-        <iframe id="pdf-frame" class="absolute inset-0 w-full h-[120%] border-0" title="PDF Viewer"></iframe>
+        <iframe id="pdf-frame" class="absolute pt-4 inset-0 w-full h-[112%] border-0" title="PDF Viewer"></iframe>
     </main>
 
     <!-- Bottom Navigation -->
@@ -91,6 +94,13 @@
                 if (t) {
                     document.getElementById('pdf-title').innerText = t.name;
                     document.title = `${t.name} - 行程手冊`;
+
+                    const dateEl = document.getElementById('pdf-date');
+                    if (dateEl && t.startDate && t.endDate) {
+                        const startStr = t.startDate.replace(/-/g, '.');
+                        const endStr = t.endDate.replace(/-/g, '.');
+                        dateEl.innerHTML = `<i class="fas fa-calendar-day"></i> ${startStr} - ${endStr}`;
+                    }
                 }
             }
 

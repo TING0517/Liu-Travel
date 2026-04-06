@@ -10,6 +10,8 @@ export const trips = [
         secondaryColor: '#90E0EF',
         accentColor: '#FFB7C5',   // 櫻花粉
         currency: 'KRW',         // 目標幣別
+        fxRate: 46,              // 結算匯率
+        fxOperator: 'divide',    // 換算方式 (KRW用除法)
         icon: 'fa-ship',         // 主題圖示 (FontAwesome class)
         flights: [
             { type: 'dep', label: '去程 3/29 · 濟州航空 7C6164', time: '02:50 TPE → 06:10 PUS' },
@@ -23,14 +25,30 @@ export const trips = [
         endDate: '2025-12-09',
         coverImg: './img/京都.jpg',
         pdfUrl: './pdf/2025京都、大阪旅遊手冊.pdf'
-    }
+    },
     {
-        id: '2025_kyoto',
+        id: '2025_seoul',
         name: '2025首爾賞櫻之旅',
         startDate: '2025-04-04',
         endDate: '2025-04-09',
         coverImg: './img/首爾櫻花.jpg',
         pdfUrl: './pdf/2025首爾旅遊手冊.pdf'
+    },
+    {
+        id: '2024_nagoya',
+        name: '2024名古屋大阪之旅',
+        startDate: '2024-08-28',
+        endDate: '2024-09-02',
+        coverImg: './img/名古屋.jpg',
+        pdfUrl: './pdf/2024日本名古屋、大阪旅遊手冊.pdf'
+    },
+    {
+        id: '2023_osaka',
+        name: '2023京都大阪之旅',
+        startDate: '2023-09-06',
+        endDate: '2023-09-12',
+        coverImg: './img/大阪.jpg',
+        pdfUrl: './pdf/2023大阪旅遊手冊.pdf'
     }
 ];
 

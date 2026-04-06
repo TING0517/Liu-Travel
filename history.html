@@ -73,7 +73,7 @@
     </header>
 
     <!-- Trip List Content -->
-    <main class="px-6 pb-32">
+    <main class="px-6 pt-2">
         <div id="trips-container" class="space-y-6">
             <!-- Trips will be injected here -->
         </div>
@@ -140,12 +140,12 @@
                     </div>
                     <div class="p-6 flex gap-3">
                         ${t.pdfUrl ?
-                            `<button onclick="window.location.href='history_pdf.html?tripId=${t.id}&pdfUrl=' + encodeURIComponent('${t.pdfUrl}')" 
+                    `<button onclick="window.location.href='history_pdf.html?tripId=${t.id}&pdfUrl=' + encodeURIComponent('${t.pdfUrl}')" 
                                 class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-800 font-black py-4 rounded-3xl transition-all flex items-center justify-center gap-2">
                                 <i class="fas fa-file-pdf text-red-500"></i> PDF 行程檔
                             </button>`
-                            :
-                            `<button onclick="handleViewTrip('${t.id}')" 
+                    :
+                    `<button onclick="handleViewTrip('${t.id}')" 
                                 class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-800 font-black py-4 rounded-3xl transition-all flex items-center justify-center gap-2">
                                 <i class="fas fa-calendar-alt text-sky-500"></i> 行程
                             </button>
@@ -153,7 +153,7 @@
                                 class="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-800 font-black py-4 rounded-3xl transition-all flex items-center justify-center gap-2">
                                 <i class="fas fa-receipt text-emerald-500"></i> 花費
                             </button>`
-                        }
+                }
                     </div>
                 </div>
             `).join('');

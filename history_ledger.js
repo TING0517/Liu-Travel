@@ -22,7 +22,6 @@ let expenses = [];
 let activeFilterDate = 'all';
 
 const getExpensePath = () => `${tripId}_expenses`;
-const getSettingsPath = () => `${tripId}_settings`;
 
 function hideLoading() {
     const loading = document.getElementById('loading-overlay');
@@ -34,11 +33,11 @@ function hideLoading() {
 // --- UI INIT ---
 function setupUI() {
     document.title = `${currentTrip.name} - 花費紀錄`;
-    
+
     // 更新 Header
     const nameEl = document.getElementById('trip-name');
     if (nameEl) nameEl.innerText = currentTrip.name;
-    
+
     const dateEl = document.getElementById('trip-date');
     if (dateEl) {
         const startStr = currentTrip.startDate.replace(/-/g, '.');
@@ -52,23 +51,21 @@ function setupUI() {
 }
 
 async function fetchSettings() {
-    if (!db) return;
-    try {
-        const snap = await getDoc(doc(db, getSettingsPath(), "general"));
-        if (snap.exists()) {
-            fxRate = snap.data().fxRate || 46;
-        }
-        document.getElementById('fx-display').innerText = `匯率 1 : ${fxRate}`;
-    } catch (e) { console.error(e); }
+    // 改為直接從 config.js 讀取寫死的結算匯率，不再去 Firebase 抓取
+    fxRate = currentTrip.fxRate;
+    const op = currentTrip.fxOperator;
+
+    // 顯示方式統一為 匯率 {幣別} : {數值}
+    document.getElementById('fx-display').innerText = `匯率 ${tripCurrency} : ${fxRate}`;
 }
 
 async function fetchExpenses() {
     if (!db) return;
     const q = collection(db, getExpensePath());
-    
+
     onSnapshot(q, (snapshot) => {
         expenses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
+
         // 排序改為：日期先行，同日期則按 createdAt 早到晚
         expenses.sort((a, b) => {
             const dateComp = a.date.localeCompare(b.date);
@@ -93,16 +90,21 @@ function updateTotals() {
     let totalTwdCount = 0;
     let behalfTwdCount = 0;
 
+    const op = currentTrip.fxOperator;
+
     expenses.forEach(item => {
         // 台幣計算
-        const entryTwd = item.currency === 'TWD' ? item.originalPrice : (item.price / fxRate);
+        let entryTwd = item.originalPrice;
+        if (item.currency !== 'TWD') {
+            entryTwd = op === 'multiply' ? (item.price * fxRate) : (item.price / fxRate);
+        }
         totalTwdCount += entryTwd;
         if (item.isOnBehalf) behalfTwdCount += entryTwd;
     });
 
     const totalTwdEl = document.getElementById('total-twd');
     const behalfTwdEl = document.getElementById('behalf-twd');
-    
+
     if (totalTwdEl) totalTwdEl.innerText = formatNumber(totalTwdCount);
     if (behalfTwdEl) behalfTwdEl.innerText = formatNumber(behalfTwdCount);
 }
@@ -110,9 +112,9 @@ function updateTotals() {
 function renderExpenses() {
     const container = document.getElementById('expense-container');
     if (!container) return;
-    
+
     let filtered = activeFilterDate === 'all' ? expenses : expenses.filter(e => e.date === activeFilterDate);
-    
+
     if (filtered.length === 0) {
         container.innerHTML = `<div class="glass-card p-10 rounded-[2rem] text-center text-slate-400">該日期尚無歷史支出</div>`;
         updateTotals();
@@ -135,8 +137,9 @@ function renderExpenses() {
             </div>
             <div class="space-y-3">
                 ${groups[date].map(item => {
-                    const twdAmount = item.currency === 'TWD' ? item.originalPrice : Math.round(item.price / fxRate);
-                    return `
+        const op = currentTrip.fxOperator;
+        const twdAmount = item.currency === 'TWD' ? item.originalPrice : Math.round(op === 'multiply' ? (item.price * fxRate) : (item.price / fxRate));
+        return `
                     <div class="glass-card p-5 rounded-[1.8rem] flex items-center justify-between border-white/40 shadow-sm">
                         <div class="min-w-0 flex-1">
                             ${item.isOnBehalf ? `<span class="inline-block px-2 py-0.5 rounded bg-indigo-50 text-indigo-500 text-[9px] font-black uppercase mb-1 border border-indigo-100">代付</span>` : ''}
@@ -174,7 +177,7 @@ function renderDaySelector() {
 
     // 2. 獲取實際有記帳的日期
     const expenseDates = [...new Set(expenses.map(item => item.date))];
-    
+
     // 3. 聯集並排序
     const allUniqueDates = [...new Set([...dateRange, ...expenseDates])].sort();
 
