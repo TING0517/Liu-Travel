@@ -54,7 +54,7 @@
 <body class="pb-32 bg-slate-50 no-bounce">
 
     <!-- Header -->
-    <header class="coastal-gradient pt-8 pb-12 px-6 rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
+    <header class="coastal-gradient pt-6 pb-8 px-6 rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
         <div class="relative z-10 flex flex-col gap-6">
             <div class="px-1 text-white">
                 <h1 class="text-3xl font-black mb-1 tracking-tight drop-shadow-md">匯率計算機</h1>
@@ -98,7 +98,7 @@
                 <!-- Top Info -->
                 <div class="flex justify-start items-center mb-4">
                     <button onclick="changeFxRate()" id="fx-rate-display"
-                        class="px-4 py-1.5 bg-sky-50 text-sky-600 rounded-full text-s font-bold tracking-wider active:scale-95 transition-transform">
+                        class="px-4 py-1.5 bg-sky-50 text-sky-600 rounded-full text-xs font-bold tracking-wider active:scale-95 transition-transform">
                         匯率 JPY : 0.21
                     </button>
                 </div>
@@ -106,15 +106,13 @@
                 <!-- Display Area -->
                 <div class="space-y-1.5 mb-2 relative">
                     <div class="relative">
-                        <label id="calc-currency-label"
-                            class="block text-[14px] font-black text-slate-300 uppercase tracking-widest mb-1 pl-2">JPY</label>
                         <div id="calc-display"
                             class="w-full bg-slate-50 border-none px-6 py-2 rounded-xl text-base font-black text-right shadow-inner min-h-[48px] flex items-center justify-end break-all overflow-y-auto pr-16">
                             0</div>
                     </div>
 
                     <button onclick="toggleSwap()"
-                        class="absolute right-4 top-[50%] -translate-y-1/2 bg-white text-sky-500 shadow-md w-10 h-10 rounded-full flex justify-center items-center active:scale-95 z-10 border border-sky-100 hover:bg-sky-50 transition-colors outline-none cursor-pointer">
+                        class="absolute right-4 top-[40%] -translate-y-1/2 bg-white text-sky-500 shadow-md w-10 h-10 rounded-full flex justify-center items-center active:scale-95 z-10 border border-sky-100 hover:bg-sky-50 transition-colors outline-none cursor-pointer">
                         <i class="fas fa-exchange-alt rotate-90"></i>
                     </button>
 
@@ -125,7 +123,7 @@
                         <label id="res-currency-label"
                             class="block text-[10px] font-black text-white/60 uppercase tracking-widest mb-1">TWD</label>
                         <div class="flex items-baseline justify-end gap-2 pr-12">
-                            <span id="res-twd" class="text-3xl font-black text-white tracking-tighter">0</span>
+                            <span id="res-twd" class="text-xl font-black text-white tracking-tighter">0</span>
                             <span id="res-unit" class="text-white/60 text-xs font-bold">元</span>
                         </div>
                     </div>
