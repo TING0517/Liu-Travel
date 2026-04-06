@@ -62,15 +62,18 @@
 
     <main class="flex-1 w-full bg-slate-100 pdf-container relative">
         <iframe id="pdf-frame" class="absolute pt-4 inset-0 w-full h-[112%] border-0" title="PDF Viewer"></iframe>
-        
+
         <!-- 行動裝置/Android 專用備用開啟按鈕 -->
-        <div id="mobile-fallback" class="hidden absolute inset-0 flex-col items-center justify-center p-8 text-center bg-slate-100 z-10 pt-4">
-            <div class="w-24 h-24 bg-red-100 text-red-500 rounded-[2.5rem] flex items-center justify-center text-4xl mb-6 shadow-lg shadow-red-500/20">
+        <div id="mobile-fallback"
+            class="hidden absolute inset-0 flex-col items-center justify-center p-8 text-center bg-slate-100 z-10 pt-4">
+            <div
+                class="w-24 h-24 bg-red-100 text-red-500 rounded-[2.5rem] flex items-center justify-center text-4xl mb-6 shadow-lg shadow-red-500/20">
                 <i class="fas fa-file-pdf"></i>
             </div>
             <h2 class="text-2xl font-black text-slate-800 mb-2">文件已經準備好</h2>
             <p class="text-slate-500 text-sm mb-8 font-medium">因 Android 系統限制無法直接預覽<br>請點擊下方按鈕開啟或下載 PDF 手冊</p>
-            <button id="mobile-open-btn" class="bg-slate-800 text-white font-bold text-lg px-8 py-4 rounded-full shadow-xl shadow-slate-800/30 active:scale-95 transition-all flex items-center gap-3">
+            <button id="mobile-open-btn"
+                class="bg-slate-800 text-white font-bold text-lg px-8 py-4 rounded-full shadow-xl shadow-slate-800/30 active:scale-95 transition-all flex items-center gap-3">
                 <i class="fas fa-external-link-alt mt-[-1px]"></i> 開啟 PDF 行程手冊
             </button>
         </div>
@@ -119,10 +122,10 @@
             if (pdfUrl) {
                 // 必須編碼 URI，避免中文檔名被解析錯誤，造成無法下載或開啟
                 const encodedPdfUrl = encodeURI(pdfUrl);
-                
+
                 // 判斷是否為行動裝置 (特別是 Android)
                 const isAndroid = /Android/i.test(navigator.userAgent);
-                
+
                 if (isAndroid) {
                     // Android 系統不支援 iframe 預覽 PDF，會跳出亂碼與錯誤的下載檔名
                     // 改用專屬設計的開啟按鈕，給予更好的使用者體驗
@@ -130,7 +133,7 @@
                     const fallback = document.getElementById('mobile-fallback');
                     fallback.classList.remove('hidden');
                     fallback.classList.add('flex');
-                    
+
                     document.getElementById('mobile-open-btn').addEventListener('click', () => {
                         // 重點：Android 下載或開啟時，千萬不要帶入 #hash，否則副檔名會損毀出現「無法開啟」
                         window.location.href = encodedPdfUrl;
